@@ -1,0 +1,113 @@
+$text-size-12: 12px;
+$text-size-13:13px;
+$gray: #aaaa;
+
+.job-list-content p{
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size:  $text-size-12;
+}
+
+.job-item-container{
+    padding-bottom: 10px;
+}
+
+.company-name{
+    color: royalblue;
+    text-decoration-style: solid;
+    text-decoration-color: royalblue;
+    text-decoration-line: underline;
+    padding: 0;
+}
+
+.job-list-content .fa{
+    display: none;
+}
+
+.job-header{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+}
+
+.job-header p{
+    font-weight: bold;
+}
+
+.job-item{
+    padding-left: 15px;
+}
+
+.job-list-content{
+    padding: 10px;
+    padding-bottom: 25px;
+    margin: 10px 0px 10px 0px;
+    background-color: white;
+    border-radius: 3px;
+}
+
+.job-item i{
+    color: initial !important;
+}
+
+@media only screen and (max-width:576px){
+    .job-header{
+        display: none;
+    }
+
+    .job-list-content p{
+        text-align: start !important;
+        text-overflow: unset;
+        white-space: unset;
+        overflow: unset;
+        padding: 3px;
+    }
+
+    .job-item{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .job-list-content .fa{
+        display: initial;
+    }
+
+    .job-list-content{
+        padding:0 !important;
+        padding-bottom: 1rem!important;
+    }
+
+    .job-item p{
+        font-size: $text-size-13!important;
+    }
+
+    .company-name{
+        padding: 0px;
+    }
+
+    .job-item-container{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    // .job-item, .job-header{
+    //     flex-wrap: nowrap;
+    // }
+ }
+
+@media only screen and (max-width:992px) and (min-width:576px) {
+    .job-list-content .col-sm-6{
+        flex: 0 0 44%;
+        max-width: 44%;
+    }
+    .job-list-content .col-sm-2{
+        flex: 0 0 18.666667%;
+        max-width: 18.666667%;
+    }
+}
+

@@ -1,0 +1,80 @@
+$green:#33CC66;
+$gray:#f6f6f6;
+
+//form
+*{
+    box-sizing: border-box;
+  }
+  
+  /* Mark input boxes that gets an error on validation: */
+  .job-form-modal-container input.invalid {
+    border: solid 1px red;
+  }
+  
+  /* Hide all steps by default: */
+  .job-form-modal-container .tab {
+    display: none;
+  }
+  
+  .job-form-modal-container #prevBtn, #nextBtn {
+        background-color: $green;
+        border: 0;
+        border-radius: 50%;
+        color: white;
+  }
+
+  /* Make circles that indicate the steps of the form: */
+  .job-form-modal-container .step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;  
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+  }
+
+select option{
+  background-color: $gray;
+}
+
+  .job-form-modal-container .step.active {
+    background-color: $green;
+    opacity: 1;
+  }
+
+.job-form-modal-container .form-title{
+    text-align: center;
+    padding: 10px;
+}
+
+.job-form-modal-container .next-pre-container {
+    text-align: center;
+    padding: 10px;
+}
+
+.job-form-modal-container select {
+    text-align-last: center;
+}
+
+.k-list-filter>.k-icon{
+  top:60%;
+}
+
+.k-dropdown-wrap{
+  background-image: none !important;
+  background-color: white !important;
+  border-radius: 0.25rem;
+}
+
+.k-list-optionlabel {
+  text-align: center;
+}
+
+// .k-notification-wrap{
+//   margin: -5px;
+// }
+
+
+

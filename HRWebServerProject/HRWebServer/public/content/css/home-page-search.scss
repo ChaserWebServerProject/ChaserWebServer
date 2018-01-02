@@ -1,0 +1,133 @@
+$green:#33CC66;
+
+.div-input{
+    width: 40%;
+    float: left;
+}
+
+.main-content{
+    padding: 10px 35px 45px 35px;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 50%;
+    border-radius: 3px;
+}
+
+.search-widget{
+    // height: 500px;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input, select{
+    width:100%;
+    height: 35px !important;
+}
+
+.div-select{
+    width: 25%;
+    float: left;
+    padding-left: 5px;
+}
+
+.btn-search{
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    padding: 0px;
+    border-color: $green;
+}
+
+.div-btn{
+    width: 10%;
+    float: left;
+    height: 35px;
+    padding-left: 5px;
+}
+
+.search-widget .title{
+    color: white;
+    padding: 10px;
+    font-family: cursive;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (max-width:1200px){
+    .main-content{
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width:1150px){
+    .search-widget{
+        height: 500px;
+    }
+}
+
+@media only screen and (max-width:1100px){
+    .main-content{
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width:910px){
+    .main-content{
+        width: 80%;
+    }
+}
+
+
+@media only screen and (max-width:810px){
+    .main-content{
+        width: 90%;
+    }
+}
+
+
+@media only screen and (max-width:660px){
+    .main-content{
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-width:576px){
+    .main-content{
+        width: 100%;
+    }
+    
+    .div-input, .div-select, .div-btn{
+        width: 100%;
+        padding: 10px 45px 10px 45px;
+    }
+
+    .search-widget .form-control{
+        height: 35px !important;
+    }
+
+    .search-widget .btn{
+        height: 35px !important;
+    }
+    .search-widget .btn-search ::after{
+        content: " Tìm công việc";
+        font-size: 14px;
+    }
+
+    .search-widget .btn-search{
+        padding: 1px 6px !important;
+    }
+}
+
+@media only screen and(max-width:300px){
+    .search-widget .title{
+       display: none!important;
+    }
+}

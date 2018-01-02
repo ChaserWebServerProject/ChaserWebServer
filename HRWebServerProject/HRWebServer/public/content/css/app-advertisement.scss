@@ -1,0 +1,137 @@
+$green:#33CC66;
+
+.advertise-container {
+    background-color: white;
+    padding-bottom: 15px;
+    padding-top: 13px;
+    border-radius: 5px;
+}
+
+.advertise-bottom-section .demo{
+    width: 100%;
+}
+
+.advertise-bottom-section{
+    margin: 0px;
+}
+
+.advertise-content .mySlides{
+
+}
+
+.advertise-content .mySlides img {
+    width: 80%;
+    display: block;
+    margin: auto;
+}
+
+.advertise-container * {
+    box-sizing: border-box;
+  }
+  
+  /* Position the image container (needed to position the left and right arrows) */
+  .advertise-container .container {
+    position: relative;
+  }
+  
+  /* Hide the images by default */
+  .advertise-container .mySlides {
+    display: none;
+  }
+  
+  /* Add a pointer when hovering over the thumbnail images */
+  .advertise-container .cursor {
+    cursor: pointer;
+  }
+  
+  /* Next & previous buttons */
+  .advertise-container .prev,
+  .next {
+    cursor: pointer;
+    position: absolute;
+    top: 35%;
+    width: auto;
+    padding: 4px;
+    // margin-top: -27%;
+    color: white !important;
+    font-weight: bold;
+    font-size: 20px;
+    user-select: none;
+    -webkit-user-select: none;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Position the "next button" to the right */
+  .advertise-container .next {
+    right: 15.45px;
+    border-radius: 0px 3px 3px 0px;
+  }
+
+   /* Position the "prev button" to the right */
+   .advertise-container .prev {
+    border-radius: 3px 0px 0px 3px;
+  }
+  
+  /* On hover, add a black background color with a little bit see-through */
+  .advertise-container .prev:hover,
+  .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* Number text (1/3 etc) */
+  .advertise-container .numbertext {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+  }
+
+  .advertise-container .numbertext p{   
+    margin-top: 15px;
+    align-self: center;
+    color: white;
+    font-size: 10px;
+}
+  
+  /* Container for image text */
+  .advertise-container .caption-container {
+    text-align: center;
+    background-color: #222;
+    // padding: 2px 16px;
+    color: white;
+  }
+  
+  .advertise-container #caption{
+    padding: 10px 5px 12px 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  .advertise-container .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Six columns side by side */
+  .advertise-container .column {
+    float: left;
+    width: 16.66%;
+  }
+  
+  /* Add a transparency effect for thumnbail images */
+  .advertise-container .demo {
+    opacity: 0.6;
+  }
+  
+  .advertise-container .active,
+  .demo:hover {
+    opacity: 1;
+  }

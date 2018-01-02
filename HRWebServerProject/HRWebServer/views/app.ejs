@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Human Resource</title>
+
+    <!-- font-awesome css v4-->
+    <link rel="stylesheet" href="/libs/css/font-awesome.min.css" />
+    <!-- CSS bootstrap v4-->
+    <link rel="stylesheet" href="/libs/css/bootstrap.min.css" />
+    <!-- jQuery library JS -->
+    <script src="/libs/js/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="/libs/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="/libs/js/bootstrap.min.js"></script>
+    <!-- Bootbox JS -->
+    <script src="/libs/js/bootbox.min.js"></script>
+    <!-- BlockUI JS -->
+    <script src="/libs/js/jquery.blockUI.js" /></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/javascript">
+        var iScrollPos = 0;
+        $(window).scroll(function () {
+            var iCurScrollPos = $(this).scrollTop();
+            if (iCurScrollPos > iScrollPos) {
+                //Scrolling Down
+                $('.navbar').fadeOut("slow");
+            } else {
+                //Scrolling Up
+                $('.navbar').fadeIn("slow")
+            }
+            iScrollPos = iCurScrollPos;
+            return;
+        });
+    </script>
+    <script src="/bundle.js"></script>
+</body>
+
+</html>

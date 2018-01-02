@@ -1,0 +1,25 @@
+$gray:#e9ebee;
+
+.app-container{
+    // background-image: url('../../../img/local_img/gray_background.png');
+    background-repeat: no-repeat;
+    width: 100% !important;
+    height: 100% !important;
+    background-size: cover !important;
+    background-color: $gray;
+}
+
+.app-container .btn{
+    cursor: pointer;
+}
+
+.app-container .blockUI {
+    
+}
+
+@media only screen and (min-width: 768px)
+{
+    .app-container .container {
+        max-width: 900px;
+    }
+}
