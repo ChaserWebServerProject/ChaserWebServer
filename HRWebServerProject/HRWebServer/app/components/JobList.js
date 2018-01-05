@@ -37,13 +37,13 @@ export default class JobList extends Component {
                     </div>
                 </div>
                 {
-                    jobs.map(job =>
-                        (<div key={job._id} id={job._id} className="job-item-container">
+                    jobs.map((job, index) =>
+                        (<div key={index} id={job._id} className="job-item-container">
                             <hr />
                             <div className="row job-item">
                                 <div className="col-xs-12 col-sm-6 job-title">
                                     <p><i className="fa fa-suitcase" aria-hidden="true"></i> {job.jobExtend.position}</p>
-                                    <p><a href={"#" + job.company._id} className="company-name"><i className="fa fa-building" aria-hidden="true"></i> <strong>{job.company.companyName}</strong></a></p>
+                                    <p><a href={"#" + job.user.company._id} className="company-name"><i className="fa fa-building" aria-hidden="true"></i> <strong>{job.user.company.companyName}</strong></a></p>
                                 </div>
                                 <div className="col-xs-4 col-sm-2">
                                     <p className="text-center"><i className="fa fa-usd" aria-hidden="true"></i> {job.jobExtend.salary}</p>

@@ -20,7 +20,10 @@ module.exports = {
             'AppAdvertisement': path.resolve(__dirname, './app/components/AppAdvertisement'),
             'Follow': path.resolve(__dirname, './app/components/Follow'),
             'App': path.resolve(__dirname, './app/components/App'),
-            'JobFormModal': path.resolve(__dirname, './app/components/JobFormModal')
+            'JobFormModal': path.resolve(__dirname, './app/components/JobFormModal'),
+            'ImageBox': path.resolve(__dirname, './app/components/ImageBox'),
+            'JobGrid': path.resolve(__dirname, './app/components/JobGrid'),            
+            'Error404Page': path.resolve(__dirname, './app/components/Error404Page'),            
         },
         extensions: ['.js', '.jsx'],
     },

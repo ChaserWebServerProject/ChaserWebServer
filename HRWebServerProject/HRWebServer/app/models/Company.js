@@ -4,14 +4,38 @@ const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongoose.connection);
 
 var companySchema = new Schema({
-    _id: { type: Number },
-    companyName: { type: String, required: true, maxlength: 200 },
-    dateCreated: { type: Date, default: Date.now },
-    companyExtend: { type: Number, ref: 'company_extend', default: null },
-    jobs: [{ type: Number, ref: 'job' }],
-    users: [{ type: Schema.Types.ObjectId, ref: 'user' }]
+    orderId: {
+        type: Number
+    },
+    companyName: {
+        type: String,
+        required: true,
+        maxlength: 200,
+        trim: true
+    },
+    dateCreated: {
+        type: Date,
+        default: Date.now
+    },
+    companyExtend: {
+        type: Schema.Types.ObjectId,
+        ref: 'company_extend',
+        default: null
+    },
+    // jobs: [
+    //     {
+    //         type: Schema.Types.ObjectId,
+    //         ref: 'job'
+    //     }
+    // ],
+    users: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user'
+        }
+    ]
 });
 
-companySchema.plugin(autoIncrement.plugin, { model: 'company', field: '_id', startAt: 1 });
+companySchema.plugin(autoIncrement.plugin, { model: 'company', field: 'orderId', startAt: 1 });
 
 module.exports = mongoose.model('company', companySchema);

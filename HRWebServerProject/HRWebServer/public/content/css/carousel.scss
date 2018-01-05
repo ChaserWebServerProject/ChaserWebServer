@@ -3,6 +3,7 @@
     width: 5%;
     justify-content: flex-start;
     z-index: 1;
+    padding-left: 10px;
 }
 
 #home-carousel .timer-container .timer-animation:hover{
@@ -59,6 +60,7 @@
     width: 5%;
     justify-content: flex-end;
     z-index: 1;
+    padding-right: 10px;
 }
 
 .carousel-indicators{
@@ -67,6 +69,7 @@
 
 @media only screen and(max-width:576px){
     #home-carousel .timer-container{
+        font-size: 23px;
         bottom: 20px;
     }
 }
@@ -89,7 +92,7 @@
     }
 }
 
-@media only screen and (max-width:900px){
+@media only screen and (max-width:661px){
    .carousel-control-prev{
        display: none;
    }

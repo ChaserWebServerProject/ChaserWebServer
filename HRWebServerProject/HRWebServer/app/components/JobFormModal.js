@@ -1,22 +1,34 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
 import { DropDownList } from '@progress/kendo-dropdowns-react-wrapper';
 import { Notification } from '@progress/kendo-popups-react-wrapper';
 
 import '../../public/content/css/job-form-modal.scss';
-import { formatDateYYMMDD } from '../../util/Util';
+
+import {
+    formatDateYYMMDD
+} from '../../util/Util';
+import {
+    getUpdateJobViewModel
+} from '../view_models/JobViewModel';
+import {
+    provinceDropOptions,
+    jobTypeDropOptions,
+    cityDropOptions,
+    companyDropOptions,
+    genderDropOptions
+} from '../kendo_ui_options/DropDownListOptions';
+
 export default class JobFormModal extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.initialState = {
             job: {
                 jobName: '',
-                user: '5a43972c3e241408ecba9573',
-                company: '',
-                jobType: '',
-                city: ''
+                user: '5a4e0dc781611a3254ab2473',
+                jobType: null,
+                city: null
             },
             job_extend: {
                 position: '',
@@ -27,13 +39,73 @@ export default class JobFormModal extends Component {
                 amount: 1,
                 genderRequirement: 'NR'
             },
-
+            jobIdToEdit: null,
+            isEdit: false
         };
+        this.state = this.initialState;
         this.currentTab = 0; // Current tab is set to be the first tab (0)
     }
 
     componentWillMount() {
         this.onCreateDropdownOptions();
+    }
+
+    onCreateDropdownOptions() {
+        this.provinceDropOptions = provinceDropOptions;
+        this.cityDropOptions = cityDropOptions;
+        this.companyDropOptions = companyDropOptions;
+        this.jobTypeDropOptions = jobTypeDropOptions;
+        this.genderDropOptions = genderDropOptions;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.jobId) {
+            this.onShowJobToEdit(nextProps.jobId);
+        } else {
+            this.state.isEdit = false;
+            this.setState(this.state);
+        }
+    }
+
+    onShowJobToEdit(jobId) {
+        $.blockUI();
+        axios.get('/service/job/get_job_by_id/' + jobId)
+            .then(res => {
+                if (res.data) {
+                    const resJob = res.data;
+                    const resJobExtend = resJob.jobExtend;
+                    const newState = {
+                        job: {
+                            jobName: resJob.jobName,
+                            user: '5a4e0dc781611a3254ab2473',
+                            jobType: resJob.jobType._id,
+                            city: resJob.city._id
+                        },
+                        job_extend: {
+                            position: resJobExtend.position,
+                            deadline: formatDateYYMMDD(new Date(resJobExtend.deadline)),
+                            salary: resJobExtend.salary,
+                            graduation: resJobExtend.graduation,
+                            workType: resJobExtend.workType,
+                            amount: resJobExtend.amount,
+                            genderRequirement: resJobExtend.genderRequirement
+                        },
+                        jobIdToEdit: jobId,
+                        isEdit: true
+                    }
+
+                    this.state = newState;
+                    this.setState(this.state);
+                    this.jobTypeDrop.value(resJob.jobType._id);
+                    this.provinceDrop.value(resJob.city.province._id);
+                    this.onShowCities(resJob.city.province._id);
+                    this.genderDrop.value(resJobExtend.genderRequirement);
+                }
+            })
+            .catch(err => console.log(err))
+            .then(() => {
+                $.unblockUI();
+            });
     }
 
     showTab(n) {
@@ -76,98 +148,6 @@ export default class JobFormModal extends Component {
         x[n].className += " active";
     }
 
-    onCreateDropdownOptions() {
-        this.provinceDropOptions = {
-            filter: "contains",
-            dataTextField: "provinceName",
-            dataValueField: "_id",
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/service/province/get_all_provinces",
-                        dataType: "json",
-                        type: 'GET'
-                    }
-                }
-            },
-            optionLabel: {
-                provinceName: 'Chọn',
-                _id: 'none'
-            },
-            index: 0
-        }
-
-        this.cityDropOptions = {
-            filter: "contains",
-            autoBind: false,
-            optionLabel: {
-                cityName: 'Chọn',
-                _id: 'none'
-            },
-            dataTextField: "cityName",
-            dataValueField: "_id",
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/service/city/get_city_list_by_province_id/0",
-                        dataType: "json",
-                        type: 'GET'
-                    }
-                }
-            },
-            index: 0
-        }
-
-        this.companyDropOptions = {
-            dataTextField: "companyName",
-            dataValueField: "_id",
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/service/company/get_one_company_by_user_id",
-                        dataType: "json",
-                        type: 'GET'
-                    }
-                }
-            },
-            index: 0
-        }
-
-        this.jobTypeDropOptions = {
-            filter: "contains",
-            optionLabel: {
-                jobTypeName: 'Chọn',
-                _id: 'none',
-                attributes: {
-                    'style': 'text-align: center'
-                },
-            },
-            dataTextField: "jobTypeName",
-            dataValueField: "_id",
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "/service/jobtype/get_all_jobtypes",
-                        dataType: "json",
-                        type: 'GET'
-                    }
-                }
-            },
-            index: 0
-        }
-
-        this.genderDropOptions = {
-            dataTextField: "text",
-            dataValueField: "value",
-            dataSource: [
-                { text: "Không yêu cầu", value: "NR" },
-                { text: "Nam", value: "M" },
-                { text: "Nữ", value: "F" }
-            ],
-            index: 0
-        }
-    }
-
     handleJobInputChange(newValue) {
         this.setState(state => ({
             ...state,
@@ -188,16 +168,9 @@ export default class JobFormModal extends Component {
         }));
     }
 
-    onShowCities(provinceId) {
-        let read = this.cityDrop.dataSource.options.transport.read;
-        read.url = '/service/city/get_city_list_by_province_id/' + provinceId;
-        this.cityDrop.dataSource.read();
-        // console.log(cityDrop.dataSource.data());
-    }
-
-    onJobFormSubmit(e) {
-        e.preventDefault();
-        let _this = this;
+    onCreateJob() {
+        const _this = this;
+        $.blockUI();
         axios.post('/service/job/create_job', {
             job: this.state.job,
             job_extend: this.state.job_extend
@@ -213,22 +186,62 @@ export default class JobFormModal extends Component {
                 });
             }
         })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
+            .then(() => {
+                $.unblockUI();
+            });
+    }
+
+    onEditJob() {
+        const _this = this;
+        const jobId = this.state.jobIdToEdit;
+        const updateJobContent = getUpdateJobViewModel(this.state);
+        $.blockUI();
+        axios.put('/service/job/update_job/' + jobId, updateJobContent)
+            .then(res => {
+                if (res.data.success) {
+                    _this.props.onRefreshGrid();
+                    _this.onHideModal();
+                    bootbox.alert('Sửa thành công');
+                } else {
+                    let errors = res.data.err.errors;
+                    $.each(errors, function (key, val) {
+                        _this.popupNotification.show(val.message, 'error');
+                    });
+                }
+            })
+            .catch(err => console.log(err))
+            .then(() => {
+                $.unblockUI();
+            });
+    }
+
+    onSubmitJobForm(e) {
+        e.preventDefault();
+        if (this.state.isEdit) {
+            this.onEditJob();
+        } else {
+            this.onCreateJob();
+        }
     }
 
     handleProvinceInputChange(provinceId) {
-        // this.state.job.city = '';
-        // this.setState(this.state);
-        if (provinceId == 'none') {
-            provinceId = 0;
-        }
+        this.onResetCityState();
         this.onShowCities(provinceId);
     }
 
-    onCompanyDropDataBound(e) {
-        var data = e.sender.dataSource.view();
-        this.state.job.company = data[0]._id ? data[0]._id : '';
+    onResetCityState() {
+        this.state.job.city = null;
         this.setState(this.state);
+    }
+
+    onShowCities(provinceId) {
+        if (provinceId == '') {
+            provinceId = null;
+        }
+        let read = this.cityDrop.dataSource.options.transport.read;
+        read.url = `/service/city/get_city_list_by_province_id/${provinceId}`;
+        this.cityDrop.dataSource.read();
     }
 
     onHideModal() {
@@ -240,7 +253,7 @@ export default class JobFormModal extends Component {
     }
 
     render() {
-        const { job, job_extend, province, provinces, cities } = this.state;
+        const { job, job_extend, isEdit } = this.state;
         return (
             <div className="container job-form-modal-container">
                 {/* <!-- Modal --> */}
@@ -248,12 +261,22 @@ export default class JobFormModal extends Component {
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Tuyển dụng</h5>
+                                <h5 className="modal-title">
+                                    {
+                                        (() => {
+                                            if (isEdit) {
+                                                return "Sửa thông tin tuyển dụng"
+                                            } else {
+                                                return "Đăng tin tuyển dụng"
+                                            }
+                                        })()
+                                    }
+                                </h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form id="regForm" onSubmit={this.onJobFormSubmit.bind(this)}>
+                            <form id="regForm" onSubmit={this.onSubmitJobForm.bind(this)}>
                                 <div className="modal-body">
 
                                     {/* <!-- One "tab" for each step in the form: --> */}
@@ -273,7 +296,6 @@ export default class JobFormModal extends Component {
                                             <div className="form-group">
                                                 <label className="col-form-label col-form-label-sm" htmlFor="company">Công ty</label>
                                                 <DropDownList
-                                                    dataBound={this.onCompanyDropDataBound.bind(this)}
                                                     widgetRef={widget => this.companyDrop = widget}
                                                     // change={(e) => this.handleJobInputChange({ company: e.sender.value() })}
                                                     {...this.companyDropOptions} />
@@ -283,7 +305,7 @@ export default class JobFormModal extends Component {
                                                 <DropDownList
                                                     widgetRef={widget => this.jobTypeDrop = widget}
                                                     change={(e) => this.handleJobInputChange({
-                                                        jobType: e.sender.value() == 'none' ? '' : e.sender.value()
+                                                        jobType: e.sender.value() ? e.sender.value() : null
                                                     })}
                                                     {...this.jobTypeDropOptions} />
                                             </div>
@@ -300,7 +322,7 @@ export default class JobFormModal extends Component {
                                                     <DropDownList
                                                         widgetRef={widget => this.cityDrop = widget}
                                                         change={(e) => this.handleJobInputChange({
-                                                            city: e.sender.value() == 'none' ? '' : e.sender.value()
+                                                            city: e.sender.value() ? e.sender.value() : null
                                                         })}
                                                         {...this.cityDropOptions} />
                                                 </div>
@@ -329,7 +351,7 @@ export default class JobFormModal extends Component {
                                                     placeholder="Nhập hạn nộp hồ sơ..." />
                                             </div>
                                             <div className="form-group">
-                                                <label className="col-form-label col-form-label-sm" htmlFor="salary">Lương</label>
+                                                <label className="col-form-label col-form-label-sm" htmlFor="salary">Thu nhập</label>
                                                 <input
                                                     type="text"
                                                     className="form-control form-control-sm"
@@ -388,7 +410,15 @@ export default class JobFormModal extends Component {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Hủy bỏ</button>
-                                    <button type="submit" className="btn btn-primary btn-sm">Lưu</button>
+                                    {
+                                        (() => {
+                                            if (isEdit) {
+                                                return <button type="submit" className="btn btn-primary btn-sm">Lưu</button>
+                                            } else {
+                                                return <button type="submit" className="btn btn-primary btn-sm">Thêm</button>
+                                            }
+                                        })()
+                                    }
                                 </div>
                             </form>
                         </div>
@@ -405,9 +435,54 @@ export default class JobFormModal extends Component {
         $('.k-dropdown').addClass('form-control form-control-sm');
     }
 
+    onResetState() {
+        this.state = this.initialState;
+        this.setState(this.state);
+    }
+
+    onResetDropdownData() {
+        this.provinceDrop.value('');
+        this.jobTypeDrop.value('');
+        this.genderDrop.value('NR');
+        this.cityDrop.value('');
+    }
+
+    onResetCityDropData() {
+        this.onShowCities('');
+    }
+
+    onPrevTabWhenModalHide() {
+        if (this.currentTab == 1) {
+            this.nextPrev(-1);
+        }
+    }
+
+    onAddJqueryEvents() {
+        let _this = this;
+        $('#job-form-modal').on('hidden.bs.modal', function () {
+            _this.onResetDropdownData();
+            _this.onResetState();
+            _this.onPrevTabWhenModalHide();
+            _this.onResetCityDropData();
+        });
+    }
+
+    onBindCityDropDataSourceChange() {
+        this.cityDrop.dataSource.bind("change", this.onCityDropDataSourceChange.bind(this));
+        this.cityDrop.dataSource.fetch();
+    }
+
+    onCityDropDataSourceChange() {
+        if (this.state.job.city) {
+            this.cityDrop.value(this.state.job.city);
+        }
+    }
+
     componentDidMount() {
         this.showTab(this.currentTab); // Display the crurrent tab
         this.onAddAttributes();
+        this.onAddJqueryEvents();
+        this.onBindCityDropDataSourceChange();
     }
 
 }

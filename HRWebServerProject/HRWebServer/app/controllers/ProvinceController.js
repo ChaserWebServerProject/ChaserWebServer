@@ -4,7 +4,11 @@ var router = express.Router();
 var Province = require('../models/Province');
 var City = require('../models/City');
 
-const { getAllProvinces } = require('../services/ProvinceService');
+const {
+    getAllProvinces,
+    getProvinceById,
+    createProvince
+} = require('../services/ProvinceService');
 
 /* GET ALL PROVINCES */
 router.get('/province/get_all_provinces', function (req, res, next) {
@@ -14,21 +18,20 @@ router.get('/province/get_all_provinces', function (req, res, next) {
         .catch(err => res.json(err));
 });
 
-/* GET ONE PROVINCE BY ID */
-router.get('/province/get_one_province_by_id/:id', function (req, res, next) {
-    Province.findById(req.params.id, function (err, province) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true, province: province });
-    }).populate('cities');
+/* GET PROVINCE BY ID */
+router.get('/province/get_province_by_id/:id', function (req, res, next) {
+    getProvinceById(req.params.id)
+        .exec()
+        .then(province => res.json(province))
+        .catch(err => res.json(err));
 });
 
 
 // CREATE NEW PROVINCE
 router.post('/province/create_province', function (req, res, next) {
-    Province.create(req.body, function (err) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true });
-    });
+    createProvince(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
 });
 
 /* UPDATE PROVINCE */

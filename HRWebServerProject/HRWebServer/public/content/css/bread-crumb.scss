@@ -72,7 +72,7 @@ $green2:#33CC99;
 }
 .breadcrumb-arrow li a:focus, .breadcrumb-arrow li a:hover {
     background-color: #4fc1e9;
-    border: 1px solid #4fc1e9
+    border: 1px solid #4fc1e9;
 }
 .breadcrumb-arrow li a:focus:before, .breadcrumb-arrow li a:hover:before {
     border-left-color: #4fc1e9
@@ -82,7 +82,7 @@ $green2:#33CC99;
     border: 1px solid #2494be;
 }
 .breadcrumb-arrow li a:active:after, .breadcrumb-arrow li a:active:before {
-    border-left-color: #2494be
+    border-left-color: #2494be;
 }
 
 .breadcrumb-arrow .active{

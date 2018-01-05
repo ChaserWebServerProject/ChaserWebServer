@@ -1,12 +1,20 @@
 var express = require('express');
 var router = express.Router();
+const mongoose = require('mongoose');
+const modelObjectId = mongoose.Types.ObjectId;
 
 var City = require('../models/City');
 var Province = require('../models/Province');
 var Job = require('../models/Job');
 var JobExtend = require('../models/JobExtend');
 
-const { getAllCities, getOneCityById, getCityListByProvinceId } = require('../services/CityService');
+
+const {
+    getAllCities,
+    getCityById,
+    getCityListByProvinceId,
+    createCity
+} = require('../services/CityService');
 
 /* GET ALL CITIES */
 router.get('/city/get_all_cities', function (req, res, next) {
@@ -16,9 +24,9 @@ router.get('/city/get_all_cities', function (req, res, next) {
         .catch(err => res.json(err));
 });
 
-/* GET ONE CITY BY ID */
-router.get('/city/get_one_city_by_id/:id', function (req, res, next) {
-    getOneCityById(req.params.id)
+/* GET CITY BY ID */
+router.get('/city/get_city_by_id/:id', function (req, res, next) {
+    getCityById(req.params.id)
         .exec()
         .then(city => res.json(city))
         .catch(err => res.json(err));
@@ -26,27 +34,21 @@ router.get('/city/get_one_city_by_id/:id', function (req, res, next) {
 
 /* GET LIST OF CITY BY PROVINCE ID */
 router.get('/city/get_city_list_by_province_id/:id', function (req, res, next) {
-    getCityListByProvinceId(req.params.id)
-        .exec()
-        .then(cities => res.json(cities))
-        .catch(err => res.json(err));
+    if (!modelObjectId.isValid(req.params.id)) {
+        res.json([]);
+    }
+    else {
+        getCityListByProvinceId(req.params.id)
+            .exec()
+            .then(cities => res.json(cities))
+            .catch(err => res.json(err));
+    }
 });
 
 // CREATE NEW CITY
 router.post('/city/create_city', function (req, res, next) {
-    const provinceId = req.body.provinceId;
-    Province.findById(provinceId)
-        .then(province => {
-            const data = req.body.city;
-            data.province = province;
-            City.create(data)
-                .then(city => {
-                    res.json({ success: true });
-                    province.cities.push(city);
-                    province.save();
-                })
-                .catch(err => res.json({ success: false, err: err }))
-        })
+    createCity(req)
+        .then(result => res.json({ success: result }))
         .catch(err => res.json({ success: false, err: err }));
 });
 

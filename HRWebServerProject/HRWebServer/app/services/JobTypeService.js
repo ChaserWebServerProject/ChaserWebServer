@@ -1,9 +1,25 @@
-
 var JobType = require('../models/JobType');
 var Job = require('../models/Job');
 
-getAllJobTypes = () => {
-    return JobType.find();
+const getAllJobTypes = () => {
+    return JobType.find().populate('jobs');
 }
 
-module.exports = { getAllJobTypes };
+const getJobTypeById = (id) => {
+    return JobType.findById(id).populate('jobs');
+}
+
+const createJobType = (req) => {
+    return new Promise((resolve, reject) => {
+        const jobType = new JobType(req.body);
+        jobType.save()
+            .then(() => resolve(true))
+            .catch(err => reject(err));
+    });
+}
+
+module.exports = {
+    getAllJobTypes,
+    getJobTypeById,
+    createJobType
+};

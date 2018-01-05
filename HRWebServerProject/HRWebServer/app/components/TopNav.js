@@ -8,7 +8,7 @@ export default class TopNav extends Component {
     return (
       <div className="top-nav">
         <nav className="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
-          <Link to="/" className="navbar-brand"><i className="fa fa-handshake-o" aria-hidden="true"></i> Nhân Sự</Link>
+          <Link to="/" className="navbar-brand"><i className="fa fa-handshake-o" aria-hidden="true"></i> Việc Nhanh</Link>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span className="navbar-toggler-icon"></span>
           </button>

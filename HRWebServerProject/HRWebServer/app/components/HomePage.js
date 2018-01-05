@@ -15,12 +15,22 @@ export default class HomePage extends Component {
         super(props);
         this.state = {
             newJobs: [],
-            hurryJobs: [],
-            liList: []
+            hurryJobs: []
         }
     }
 
     componentWillMount() {
+        this.onLoadJobData();
+        this.onCreateBreadCrumData();
+    }
+
+    onCreateBreadCrumData() {
+        this.liList = [
+            { key: 1, title: 'Trang chủ', isActive: true }
+        ];
+    }
+
+    onLoadJobData() {
         function getTenNewJobs() {
             return axios.get('/service/job/get_ten_new_jobs');
         }
@@ -38,22 +48,16 @@ export default class HomePage extends Component {
                 _this.setState({ newJobs, hurryJobs });
             }))
             .catch(err => console.log(err));
-
-        let liList = [
-            { key: 1, title: 'Trang chủ', isActive: true }
-        ];
-        this.state.liList = liList;
-        this.setState(this.state);
     }
 
     render() {
-        const { newJobs, hurryJobs, liList } = this.state;
+        const { newJobs, hurryJobs } = this.state;
         return (
             <div className="homepage-container">
                 <Carousel />
                 <HomePageSearch />
                 <div className="container">
-                    <BreadCrumb liList={liList} />
+                    <BreadCrumb liList={this.liList} />
                 </div>
                 <div className="container list-container">
                     <div className="row">
@@ -86,42 +90,10 @@ export default class HomePage extends Component {
                         </div>
                     </div>
                 </div>
-                {/* <!-- The Modal --> */}
-                <div id="myModal" className="modal">
-                    <span className="close">&times;</span>
-                    <img className="modal-content" id="img01" />
-                    <div id="caption"></div>
-                </div>
             </div>
         );
     }
 
     componentDidMount() {
-        // Get the modal
-        var modal = document.getElementById('myModal');
-
-        // Get the image and insert it inside the modal - use its "alt" text as a caption
-        var modalImg = document.getElementById("img01");
-        var captionText = document.getElementById("caption");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        $('img').on('click', function (e) {
-            modalImg.src = this.src;
-            modal.style.display = "block";
-        });
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
     }
 }

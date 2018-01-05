@@ -85,22 +85,22 @@ export default class AppAdvertisement extends Component {
                     {/* <!-- Thumbnail images --> */}
                     <div className="row advertise-bottom-section">
                         <div className="column">
-                            <img className="demo cursor" src={require('../../img/local_img/advertise_1.png')} onClick={() => this.currentSlide(1)} alt="Tên ứng dụng" />
+                            <img className="demo cursor img-to-show" src={require('../../img/local_img/advertise_1.png')} onClick={() => this.currentSlide(1)} alt="Tên ứng dụng" />
                         </div>
                         <div className="column">
-                            <img className="demo cursor" src={require('../../img/local_img/advertise_2.png')} onClick={() => this.currentSlide(2)} alt="Giao diện chính" />
+                            <img className="demo cursor img-to-show" src={require('../../img/local_img/advertise_2.png')} onClick={() => this.currentSlide(2)} alt="Giao diện chính" />
                         </div>
                         <div className="column">
-                            <img className="demo cursor" src={require('../../img/local_img/advertise_3.png')} onClick={() => this.currentSlide(3)} alt="Danh sách việc làm" />
+                            <img className="demo cursor img-to-show" src={require('../../img/local_img/advertise_3.png')} onClick={() => this.currentSlide(3)} alt="Danh sách việc làm" />
                         </div>
                         <div className="column">
-                            <img className="demo cursor" src={require('../../img/local_img/advertise_4.png')} onClick={() => this.currentSlide(4)} alt="Chi tiết công việc" />
+                            <img className="demo cursor img-to-show" src={require('../../img/local_img/advertise_4.png')} onClick={() => this.currentSlide(4)} alt="Chi tiết công việc" />
                         </div>
                         <div className="column">
-                            <img className="demo cursor" src={require('../../img/local_img/advertise_5.png')} onClick={() => this.currentSlide(5)} alt="Thông tin cá nhân" />
+                            <img className="demo cursor img-to-show" src={require('../../img/local_img/advertise_5.png')} onClick={() => this.currentSlide(5)} alt="Thông tin cá nhân" />
                         </div>
                         <div className="column">
-                            <img className="demo cursor" src={require('../../img/local_img/advertise_1.png')} onClick={() => this.currentSlide(6)} alt="Tên ứng dụng" />
+                            <img className="demo cursor img-to-show" src={require('../../img/local_img/advertise_1.png')} onClick={() => this.currentSlide(6)} alt="Tên ứng dụng" />
                         </div>
                     </div>
                 </div>

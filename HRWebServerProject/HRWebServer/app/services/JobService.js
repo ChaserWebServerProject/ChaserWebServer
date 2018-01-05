@@ -9,11 +9,10 @@ var User = require('../models/User');
 var Company = require('../models/Company');
 var Province = require('../models/Province');
 
-getAllJobs = () => {
+const getAllJobs = () => {
     return Job.find()
         .populate('jobExtend', 'position deadline salary graduation workType amount genderRequirement')
         .populate('jobType', 'jobTypeName')
-        .populate('company', 'companyName id companyExtend')
         .populate({
             path: 'city',
             select: 'cityCode cityName',
@@ -21,14 +20,20 @@ getAllJobs = () => {
                 path: 'province',
                 select: 'provinceCode provinceName'
             }
+        })
+        .populate({
+            path: 'user',
+            populate: {
+                path: 'company',
+                select: 'orderId companyName'
+            }
         });
 };
 
-getOneJobById = (id) => {
+const getJobById = (id) => {
     return Job.findById(id)
         .populate('jobExtend', 'position deadline salary graduation workType amount genderRequirement')
         .populate('jobType', 'jobTypeName')
-        .populate('company', 'companyName id companyExtend')
         .populate({
             path: 'city',
             select: 'cityCode cityName',
@@ -36,49 +41,53 @@ getOneJobById = (id) => {
                 path: 'province',
                 select: 'provinceCode provinceName'
             }
+        })
+        .populate({
+            path: 'user',
+            populate: {
+                path: 'company',
+                select: 'orderId companyName'
+            }
         });
 };
 
-createJob = (req) => {
+const createJob = (req) => {
     return new Promise(async (resolve, reject) => {
+        const job = new Job(req.body.job);
+        const jobExtend = new JobExtend(req.body.job_extend);
+        job.jobExtend = jobExtend._id;
+        jobExtend.job = job._id;
 
         async.waterfall([
             (callback) => {
-                Job.create(req.body.job)
-                    .then(job => callback(null, job))
+                job.save()
+                    .then(() => callback(null))
                     .catch(err => reject(err));
             },
-            (job, callback) => {
-                let reqJobExtend = req.body.job_extend;
-                reqJobExtend.job = job;
-                JobExtend.create(reqJobExtend)
-                    .then(jExtend => {
-                        job.jobExtend = jExtend;
-                        job.save().catch(err => reject(err));
-                        return callback(null, job)
-                    })
-                    .catch(err => {
-                        Job.remove(job)
-                            .exec()
+            (callback) => {
+                jobExtend.save()
+                    .then(() => callback(null))
+                    .catch(async (err) => {
+                        await Job.remove(job)
                             .catch(err => reject(err));
                         return reject(err);
                     });
             },
-            (job, callback) => {
-                Company.findByIdAndUpdate(job.company, { $push: { jobs: job.id } })
-                    .exec()
-                    .catch(err => reject(err));
+            (callback) => {
                 User.findByIdAndUpdate(job.user, { $push: { createdJobs: job.id } })
-                    .exec()
+                    .then(() => callback(null))
                     .catch(err => reject(err));
+            },
+            (callback) => {
                 JobType.findByIdAndUpdate(job.jobType, { $push: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null))
                     .catch(err => reject(err));
+            },
+            (callback) => {
                 City.findByIdAndUpdate(job.city, { $push: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null))
                     .catch(err => reject(err));
-                return callback(null);
-            }
+            },
         ], (err, result) => {
             if (err) return reject(err);
             resolve(true);
@@ -86,7 +95,7 @@ createJob = (req) => {
     });
 };
 
-updateJob = (req) => {
+const updateJob = (req) => {
     return new Promise((resolve, reject) => {
         const id = req.params.id;
         const body = req.body;
@@ -94,11 +103,9 @@ updateJob = (req) => {
         async.waterfall([
             (callback) => {
                 //update job data
-                Job.findByIdAndUpdate(id, body)
-                    .exec()
-                    .then((job) => {
-                        JobExtend.findOneAndUpdate({ job: id }, body)
-                            .exec()
+                Job.findByIdAndUpdate(id, body, { runValidators: true })
+                    .then(async (job) => {
+                        await JobExtend.findOneAndUpdate({ job: id }, body, { runValidators: true })
                             .catch(err => reject(err));
                         return callback(null, job);//return old job data
                     })
@@ -107,32 +114,30 @@ updateJob = (req) => {
             (job, callback) => {
                 // job is old data
                 //delete old reference data
-                Company.findByIdAndUpdate(job.company, { $pull: { jobs: job.id } })
-                    .exec()
-                    .catch(err => reject(err));
                 JobType.findByIdAndUpdate(job.jobType, { $pull: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null, job))
                     .catch(err => reject(err));
+            },
+            (job, callback) => {
+                //delete old reference data
                 City.findByIdAndUpdate(job.city, { $pull: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null, job))
                     .catch(err => reject(err));
-
+            },
+            (job, callback) => {
                 //update new references data
-                Company.findByIdAndUpdate(body.company, { $push: { jobs: job.id } })
-                    .exec()
-                    .catch(err => reject(err));
                 JobType.findByIdAndUpdate(body.jobType, { $push: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null, job))
                     .catch(err => reject(err));
+            },
+            (job, callback) => {
+                //update new references data                
                 City.findByIdAndUpdate(body.city, { $push: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null))
                     .catch(err => reject(err));
-
-                return callback(null);
             },
             (callback) => {
-                getOneJobById(id)
-                    .exec()
+                getJobById(id)
                     .then(job => callback(null, job))
                     .catch(err => reject(err));
             }
@@ -143,7 +148,7 @@ updateJob = (req) => {
     });
 };
 
-deleteJob = (req) => {
+const deleteJob = (req) => {
     return new Promise((resolve, reject) => {
 
         const id = req.params.id;
@@ -151,36 +156,34 @@ deleteJob = (req) => {
         async.waterfall([
             (callback) => {
                 JobExtend.findOneAndRemove({ job: id })
-                    .exec()
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
             (callback) => {
                 Job.findByIdAndRemove(id)
-                    .exec()
                     .then(job => callback(null, job))
                     .catch(err => reject(err));
             },
             (job, callback) => {
-                Company.findByIdAndUpdate(job.company, { $pull: { jobs: job.id } })
-                    .exec()
-                    .catch(err => reject(err));
                 User.findByIdAndUpdate(job.user, { $pull: { createdJobs: job.id } })
-                    .exec()
+                    .then(() => callback(null, job))
                     .catch(err => reject(err));
+            },
+            (job, callback) => {
                 JobType.findByIdAndUpdate(job.jobType, { $pull: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null, job))
                     .catch(err => reject(err));
+            },
+            (job, callback) => {
                 City.findByIdAndUpdate(job.city, { $pull: { jobs: job.id } })
-                    .exec()
+                    .then(() => callback(null))
                     .catch(err => reject(err));
-                return callback(null);
-            }
+            },
         ], (err, result) => {
             if (err) return reject(err);
-            resolve(true);
+            else resolve(true);
         });
     });
 };
 
-module.exports = { getAllJobs, getOneJobById, createJob, updateJob, deleteJob };
+module.exports = { getAllJobs, getJobById, createJob, updateJob, deleteJob };

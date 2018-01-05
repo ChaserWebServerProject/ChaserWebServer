@@ -16,7 +16,7 @@ export default class Follow extends Component {
                             <img className="page-avatar" src={require('../../img/local_img/panel_2.jpg')} alt="background" />
                         </a>
                         <div className="form-group page-info">
-                            <a className="page-name" href="#">Tìm việc nhanh</a>
+                            <a className="page-name" href="#">Việc Nhanh</a>
                             <p className="page-like">Triệu likes</p>
                         </div>
                     </div>

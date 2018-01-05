@@ -1,11 +1,20 @@
 $green:#33CC66;
+$gray:#656565;
 
-.div-input{
+.search-widget .div-input{
     width: 40%;
     float: left;
 }
 
-.main-content{
+.search-widget .k-input{
+    align-self: center;
+}
+
+.search-widget .form-control{
+    font-size: 14px;
+}
+
+.search-widget .main-content{
     padding: 10px 35px 45px 35px;
     background-color: rgba(0, 0, 0, 0.5);
     width: 50%;
@@ -25,26 +34,48 @@ $green:#33CC66;
     align-items: center;
 }
 
-input, select{
+.search-widget input, select{
     width:100%;
     height: 35px !important;
+    border-color: rgba(0,0,0,.08) !important;
+    color: $gray!important;
+    // padding-bottom: 10px;
+    background-image: none !important;
+    background-color: white !important;
+    border-radius: 0.25rem;
 }
 
-.div-select{
+.search-widget .div-select{
     width: 25%;
     float: left;
     padding-left: 5px;
 }
 
-.btn-search{
+.search-widget .btn-search{
     width: 100%;
     height: 100%;
     cursor: pointer;
     padding: 0px;
-    border-color: $green;
+    background-clip: padding-box!important;
+    border:0px;
 }
 
-.div-btn{
+.search-widget ::-webkit-input-placeholder { /* Chrome */
+    color: $gray!important;
+  }
+  .search-widget :-ms-input-placeholder { /* IE 10+ */
+    color: $gray!important;
+  }
+  .search-widget ::-moz-placeholder { /* Firefox 19+ */
+    color: $gray!important;
+    opacity: 1;
+  }
+  .search-widget :-moz-placeholder { /* Firefox 4 - 18 */
+    color: $gray!important;
+    opacity: 1;
+  }
+
+.search-widget .div-btn{
     width: 10%;
     float: left;
     height: 35px;
@@ -61,52 +92,52 @@ input, select{
 }
 
 @media only screen and (max-width:1200px){
-    .main-content{
-        width: 60%;
+    .search-widget .main-content{
+        width: 60%!important;
     }
 }
 
 @media only screen and (max-width:1150px){
     .search-widget{
-        height: 500px;
+        height: 500px!important;
     }
 }
 
 @media only screen and (max-width:1100px){
-    .main-content{
-        width: 70%;
+    .search-widget .main-content{
+        width: 70%!important;
     }
 }
 
 @media only screen and (max-width:910px){
-    .main-content{
-        width: 80%;
+    .search-widget .main-content{
+        width: 80%!important;
     }
 }
 
 
 @media only screen and (max-width:810px){
-    .main-content{
-        width: 90%;
+    .search-widget .main-content{
+        width: 90%!important;
     }
 }
 
 
 @media only screen and (max-width:660px){
-    .main-content{
-        width: 100%;
+    .search-widget .main-content{
+        width: 100% !important;
     }
 }
 
 
 @media only screen and (max-width:576px){
-    .main-content{
-        width: 100%;
+    .search-widget .main-content{
+        width: 100% !important;
     }
     
-    .div-input, .div-select, .div-btn{
-        width: 100%;
-        padding: 10px 45px 10px 45px;
+    .search-widget .div-input, .div-select, .div-btn{
+        width: 100% !important;
+        padding: 10px 45px 10px 45px !important;
     }
 
     .search-widget .form-control{
@@ -117,8 +148,8 @@ input, select{
         height: 35px !important;
     }
     .search-widget .btn-search ::after{
-        content: " Tìm công việc";
-        font-size: 14px;
+        content: " Tìm công việc"!important;
+        font-size: 14px!important;
     }
 
     .search-widget .btn-search{

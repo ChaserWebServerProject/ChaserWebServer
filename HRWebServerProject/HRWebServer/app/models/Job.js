@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongoose.connection);
+const JobType = require('../models/JobType');
 
 var JobSchema = new Schema({
-    _id: { type: Number },
+    orderId: { type: Number },
     jobName: {
         type: String,
         required: [true, 'Tên công việc không được bỏ trống.'],
-        maxlength: 200
+        maxlength: 200,
+        trim: true
     },
     dateCreated: {
         type: Date,
@@ -18,18 +20,13 @@ var JobSchema = new Schema({
         type: Number,
         default: 0
     },
-    company: {
-        type: Number,
-        ref: 'company',
-        required: [true, 'Công ty phải được chọn']
-    },
     city: {
-        type: Number,
+        type: Schema.Types.ObjectId,
         ref: 'city',
         required: [true, 'Quận/Huyện phải được chọn.']
     },
     jobType: {
-        type: Number,
+        type: Schema.Types.ObjectId,
         ref: 'job_type',
         required: [true, 'Loại hình công việc phải được chọn.']
     },
@@ -40,7 +37,7 @@ var JobSchema = new Schema({
         required: [true, 'Người tạo không được bỏ trống.']
     },
     jobExtend: {
-        type: Number,
+        type: Schema.Types.ObjectId,
         ref: 'job_extend',
         default: null
     },
@@ -53,6 +50,17 @@ var JobSchema = new Schema({
         ]
 });
 
-JobSchema.plugin(autoIncrement.plugin, { model: 'job', field: '_id', startAt: 1 });
+JobSchema.plugin(autoIncrement.plugin, { model: 'job', field: 'orderId', startAt: 1 });
 
 module.exports = mongoose.model('job', JobSchema);
+
+// JobSchema.path('jobType').validate(function (value, respond) {
+//     JobType.findOne({ _id: value }, function (err, doc) {
+//         if (err || !doc) {
+//             respond(false);
+//         } else {
+//             respond(true);
+//         }
+//     });
+
+// }, 'Loại hình công việc phải được chọn.');

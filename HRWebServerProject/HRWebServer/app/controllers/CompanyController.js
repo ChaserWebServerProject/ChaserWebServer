@@ -6,27 +6,30 @@ var CompanyExtend = require('../models/CompanyExtend');
 var Job = require('../models/Job');
 var JobExtend = require('../models/JobExtend');
 
-const { getOneCompanyByUserId } = require('../services/CompanyService');
+const {
+    getOneCompanyByUserId,
+    getCompanyById,
+    getAllCompanies,
+    createCompany
+} = require('../services/CompanyService');
 
 /* GET ALL COMPANIES */
 router.get('/company/get_all_companies', function (req, res, next) {
-    Company.find(function (err, companies) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true, companies: companies });
-    });
+    getAllCompanies()
+        .then(companies => res.json(companies))
+        .catch(err => res.json(err));
 });
 
 /* GET ONE COMPANY BY ID */
-router.get('/company/get_one_company_by_id/:id', function (req, res, next) {
-    Company.findById(req.params.id, function (err, company) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true, company: company });
-    }).populate('companyExtend');
+router.get('/company/get_company_by_id/:id', function (req, res, next) {
+    getCompanyById(req.params.id)
+        .then(company => res.json(company))
+        .catch(err => res.json(err));
 });
 
 /* GET ONE COMPANY BY USER ID */
 router.get('/company/get_one_company_by_user_id', function (req, res, next) {
-    const userId = "5a4b55007051a231489e738e";
+    const userId = "5a4e0dc781611a3254ab2473";
     getOneCompanyByUserId(userId)
         .exec()
         .then(company => {
@@ -39,21 +42,9 @@ router.get('/company/get_one_company_by_user_id', function (req, res, next) {
 
 // CREATE NEW COMPANY
 router.post('/company/create_company', async (req, res, next) => {
-    const reqCompany = new Company(req.body.company);
-    const reqCompanyExtend = new CompanyExtend(req.body.company_extend);
-
-    resCompany = await reqCompany.save().catch(err => res.json({ success: false, err: err }));
-    reqCompanyExtend.company = resCompany;
-    resCompanyExtend = await reqCompanyExtend.save().catch(err => {
-        resCompany.remove()
-            .catch(err => res.json({ success: false, err: err }));
-        return res.json({ success: false, err: err });
-    });
-    resCompany.companyExtend = resCompanyExtend;
-    resCompany.save().catch(err => {
-        res.json({ success: false, err: err });
-    });
-    return res.json({ success: true });
+    createCompany(req)
+        .then((result => res.json({ success: result })))
+        .catch(err => res.json({ success: false, err: err }));
 });
 
 /* UPDATE COMPANY */

@@ -7,46 +7,34 @@ var Job = require('../models/Job');
 var JobExtend = require('../models/JobExtend');
 var Company = require('../models/Company');
 
+const {
+    getAllUsers,
+    getUserById,
+    createUser
+} = require('../services/UserService');
 
 /* GET ALL USERS */
 router.get('/user/get_all_users', function (req, res, next) {
-    User.find(function (err, users) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true, users: users });
-    });
+    getAllUsers()
+        .exec()
+        .then(users => res.json(users))
+        .catch(err => res.json(err));
 });
 
 /* GET ONE USER BY ID */
-router.get('/user/get_one_user_by_id/:id', function (req, res, next) {
-    User.findById(req.params.id, function (err, user) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true, user: user });
-    }).populate('userExtend');
+router.get('/user/get_user_by_id/:id', function (req, res, next) {
+    getUserById(req.params.id)
+        .exec()
+        .then(user => res.json(user))
+        .catch(err => res.json(err));
 });
 
 
 // CREATE NEW USER
 router.post('/user/create_user', async (req, res, next) => {
-    const reqUser = new User(req.body.user);
-    const reqUserExtend = new UserExtend(req.body.user_extend);
-    const resUser = await reqUser.save().catch(err => res.json({ success: false, err: err }));
-    reqUserExtend.user = resUser;
-    const resUserExtend = await reqUserExtend.save().catch(err => {
-        resUser.remove()
-            .catch(err => res.json({ success: false, err: err }));
-        return res.json({ success: false, err: err });
-    });
-    resUser.userExtend = resUserExtend;
-    resUser.save().then(resU => {
-        if (req.body.user.company.trim()) {
-            Company.findByIdAndUpdate(req.body.user.company, { $push: { users: resUser.id } })
-                .then(() => res.json({ success: true }))
-                .catch(err => res.json({ success: false, err: err }));
-        } else {
-            res.json({ success: true });
-        }
-    })
-        .catch(err => { res.json({ success: false, err: err }) });
+    createUser(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
 });
 
 /* UPDATE USER */

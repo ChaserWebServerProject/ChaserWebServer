@@ -4,15 +4,43 @@ const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongoose.connection);
 
 var citySchema = new Schema({
-    _id: { type: Number },
-    cityCode: { type: String, maxlength: 6, required: true, unique: true },
-    cityName: { type: String, maxlength: 128, required: true },
-    province: { type: Number, ref: 'province', required: true },
-    dateCreated: { type: Date, default: Date.now },
-    jobs: [{ type: Number, ref: 'job' }],
-    users: [{ type: Schema.Types.ObjectId, ref: 'user' }]
+    orderId: { type: Number },
+    cityCode: {
+        type: String,
+        maxlength: 6,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    cityName: {
+        type: String,
+        maxlength: 128,
+        required: true,
+        trim: true
+    },
+    province: {
+        type: Schema.Types.ObjectId,
+        ref: 'province',
+        required: true
+    },
+    dateCreated: {
+        type: Date,
+        default: Date.now
+    },
+    jobs: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'job'
+        }
+    ],
+    users: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user'
+        }
+    ]
 });
 
-citySchema.plugin(autoIncrement.plugin, { model: 'city', field: '_id', startAt: 1 });
+citySchema.plugin(autoIncrement.plugin, { model: 'city', field: 'orderId', startAt: 1 });
 
 module.exports = mongoose.model('city', citySchema);

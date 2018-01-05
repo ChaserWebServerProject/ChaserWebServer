@@ -1,0 +1,289 @@
+/*--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+/* reset */
+// .err404page_container html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+// article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block !important;}
+// .err404page_container ol,ul{list-style:none;margin:0px;padding:0px;}
+// .err404page_container blockquote,q{quotes:none;}
+// .err404page_container blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+// .err404page_container table{border-collapse:collapse;border-spacing:0;}
+// /* start editing from here */
+.err404page_container a{text-decoration:none;}
+// .err404page_container .txt-rt{text-align:right;}/* text align right */
+// .err404page_container .txt-lt{text-align:left;}/* text align left */
+// .err404page_container .txt-center{text-align:center;}/* text align center */
+// .err404page_container .float-rt{float:right;}/* float right */
+// .err404page_container .float-lt{float:left;}/* float left */
+.err404page_container .clear{clear:both;}/* clear float */
+// .err404page_container .pos-relative{position:relative;}/* Position Relative */
+// .err404page_container .pos-absolute{position:absolute;}/* Position Absolute */
+// .err404page_container .vertical-base{	vertical-align:baseline;}/* vertical align baseline */
+// .err404page_container .vertical-top{	vertical-align:top;}/* vertical align top */
+// .err404page_container nav.vertical ul li{	display:block;}/* vertical menu */
+// .err404page_container nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
+.err404page_container img{max-width:100%;}
+/*end reset*/
+.err404page_container {
+	background: url('../../../img/local_img/err404bg.jpg') no-repeat 0px 0px;
+	background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    font-family: 'Open Sans', sans-serif;
+	// padding-bottom: 10px;
+	height: 100%;
+	width: 100%;
+}
+.err404page_container .top-bar-agile{
+	 width: 62%;
+	 margin:0 auto;
+	 padding:40px 0;
+}
+.err404page_container .logo-agileits{
+	width:20%;
+	float:left;
+}
+.err404page_container .logo-agileits img {
+    width: 25%;
+}
+.err404page_container .nav-agileinfo{
+	width:80%;
+	float:right;
+	text-align:right;
+}
+.err404page_container .nav-agileinfo ul li{
+	display:inline;
+}
+.err404page_container .nav-agileinfo ul li a {
+    display: inline-block;
+    color: #fff;
+    font-size: 18px;
+    padding: 16px 15px;
+	 -webkit-transition: all 0.5s ease-out;
+  -moz-transition: all 0.5s ease-out;
+  -ms-transition: all 0.5s ease-out;
+  -o-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+}
+.err404page_container .nav-agileinfo ul li a:hover{
+	color:#71c1ff;
+}
+.err404page_container .content-w3{
+      background: url('../../../img/local_img/error404content_bg.jpg') no-repeat 0px -89px;
+    background-size: cover;
+    width: 62%;
+    margin: 0 auto;
+    min-height: 511px;
+}
+
+.err404page_container .content-w3 h1 {
+    font-size: 200px;
+    letter-spacing: 5px;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
+	font-family: 'Ravi Prakash', cursive;
+	text-shadow:9px 9px 3px hsl(206, 15%, 40%);
+}
+.err404page_container .content-w3 h2{
+	font-size:30px;
+	letter-spacing:3px;
+	text-align:center;
+	color:#fff;
+}
+.err404page_container .content-w3 p {
+    color: #fff;
+	font-size: 16px;
+	font-size: 1rem;
+    text-align: center;
+    width: 50%;
+    margin: 60px auto 0 auto;
+    line-height: 30px;
+}
+.err404page_container .footer-w3ls p {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    line-height: 30px;
+	margin:30px 0px 20px 0;
+}
+.err404page_container .footer-w3ls p a{
+	color:#fff;
+	 -webkit-transition: all 0.5s ease-out;
+  -moz-transition: all 0.5s ease-out;
+  -ms-transition: all 0.5s ease-out;
+  -o-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+}
+.err404page_container .footer-w3ls p a:hover{
+	text-decoration:underline;
+}
+@media(max-width:1366px){
+	.err404page_container .content-w3 h1 {
+		font-size: 175px;
+	}
+    .err404page_container .content-w3 p {
+		margin: 40px auto 0 auto;
+	}
+}
+@media(max-width:1080px){
+	.err404page_container .content-w3 {
+		background: url('../../../img/local_img/error404content_bg.jpg') no-repeat -94px -71px;
+	}
+	.err404page_container .content-w3 {
+		min-height: 563px;
+	}
+	.err404page_container .content-w3 p {
+		width: 65%;
+	}
+}
+@media(max-width:1024px){
+	.err404page_container .top-bar-agile {
+		width: 71%;
+	}
+	.err404page_container .content-w3 {
+		width: 71%;
+		min-height: 454px;
+	}
+}
+@media(max-width:768px){
+	.err404page_container .content-w3 {
+		background: url('../../../img/local_img/error404content_bg.jpg') no-repeat -193px -80px;
+	}
+	.err404page_container .content-w3 p {
+		width: 75%;
+	}
+}
+@media(max-width:736px){
+	.err404page_container .top-bar-agile {
+		padding: 25px 0;
+	}
+	.err404page_container .logo-agileits img {
+		width: 36%;
+	}
+	.err404page_container .logo-agileits {
+		margin-top:10px;
+	}
+	.err404page_container .content-w3 p {
+		width: 82%;
+	}
+}
+@media(max-width:667px){
+	.err404page_container .content-w3 {
+		background: url('../../../img/local_img/error404content_bg.jpg') no-repeat -242px -86px;
+	}
+	.err404page_container .content-w3 p {
+		width: 90%;
+	}
+}
+@media(max-width:600px){
+	.err404page_container .content-w3 {
+		background: url('../../../img/local_img/error404content_bg.jpg') no-repeat -263px -86px;
+	}
+	.err404page_container .nav-agileinfo ul li a {
+		font-size: 16px;
+		padding: 16px 12px;
+	}
+	.err404page_container .content-w3 h1 {
+		font-size: 160px;
+	}
+	.err404page_container .content-w3 p {
+		width: 92%;
+		font-size:15px;
+	}
+}
+@media(max-width:568px){
+	.err404page_container .content-w3 h2 {
+		font-size: 28px;
+	}
+}
+
+@media(max-width:480px){
+	.err404page_container .logo-agileits img {
+		width: 44%;
+	}
+	.err404page_container .nav-agileinfo ul li a {
+		font-size: 15px;
+		padding: 16px 9px;
+	}
+	.err404page_container .content-w3 {
+		background: url('../../../img/local_img/error404content_bg.jpg') no-repeat -293px -86px;
+	}
+	.err404page_container .content-w3 h1 {
+		font-size: 150px;
+	}
+	.err404page_container .content-w3 h2 {
+		font-size: 24px;
+		letter-spacing: 2px;
+	}
+	.err404page_container .footer-w3ls p {
+		color: #fff;
+		font-size: 14px;
+		width:90%;
+		margin:20px auto;
+	}
+}
+@media(max-width:414px){
+	.err404page_container .top-bar-agile {
+		width: 80%;
+	}
+	.err404page_container .logo-agileits img {
+		width: 48%;
+	}
+	.err404page_container .nav-agileinfo ul li a {
+		font-size: 15px;
+		padding: 16px 7px;
+	}
+	.err404page_container .content-w3 {
+		width: 80%;
+		min-height:425px;
+	}
+	.err404page_container .content-w3 h1 {
+		font-size: 140px;
+	}
+	.err404page_container .content-w3 h2 {
+		font-size: 22px;
+
+	}
+}
+@media(max-width:384px){
+	.err404page_container .nav-agileinfo ul li a {
+		font-size: 14px;
+		padding: 16px 6px;
+	}
+	.err404page_container .top-bar-agile {
+		width: 85%;
+	}
+	.err404page_container .content-w3 {
+		width: 85%;
+	}
+	.err404page_container .content-w3 h2 {
+		font-size: 20px;
+	}
+	.err404page_container .content-w3 p {
+		width: 100%;
+		font-size: 14px;	
+	}
+}
+@media(max-width:320px){
+	.err404page_container .top-bar-agile {
+		padding:15px 0;
+	}
+	.err404page_container .nav-agileinfo ul li a {
+		font-size: 13px;
+		padding: 16px 4px;
+    }
+    
+	.err404page_container .content-w3 {
+		background: url('../../../img/local_img/error404content_bg.jpg') no-repeat -333px -86px;
+	}
+	.err404page_container .content-w3 h1 {
+		font-size: 135px;
+	}
+	.err404page_container .content-w3 h2 {
+		font-size: 18px;
+	}
+}

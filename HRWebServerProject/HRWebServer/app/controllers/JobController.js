@@ -1,8 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async');
-
-const { getAllJobs, getOneJobById, createJob, updateJob, deleteJob } = require('../services/JobService');
+var Job = require('../models/Job');
+var JobExtend = require('../models/JobExtend');
+const {
+    getAllJobs,
+    getJobById,
+    createJob,
+    updateJob,
+    deleteJob
+} = require('../services/JobService');
+const {
+    convertDateToCompare
+} = require('../../util/Util');
 
 /* GET ALL JOBS */
 router.get('/job/get_all_jobs', (req, res, next) => {
@@ -17,7 +27,14 @@ router.get('/job/get_ten_new_jobs', (req, res, next) => {
         .sort({ dateCreated: 'desc' })
         .exec()
         .then(jobs => {
-            var finalResults = jobs.filter((item) => item.jobExtend.deadline >= new Date()).slice(0, 10);
+            let toDay = new Date();
+            let deadlineDate;
+            const finalResults = jobs.filter((item) => {
+                //convert to date. Compare two date.
+                toDay = convertDateToCompare(toDay);
+                deadlineDate = convertDateToCompare(item.jobExtend.deadline);
+                return deadlineDate.getTime() >= toDay.getTime();
+            }).slice(0, 10);
             res.json(finalResults);
         })
         .catch(err => res.json(err));
@@ -28,18 +45,25 @@ router.get('/job/get_ten_hurry_jobs', function (req, res, next) {
     getAllJobs()
         .exec()
         .then(jobs => {
-            const start = new Date();
-            const end = new Date();
+            let start = new Date();
+            let end = new Date();
             end.setDate(start.getDate() + 5);
-            const finalResults = jobs.filter((item) => item.jobExtend.deadline >= start && item.jobExtend.deadline <= end).slice(0, 10);
+            let deadlineDate;
+            const finalResults = jobs.filter((item) => {
+                //convert date to compare. Compare date
+                start = convertDateToCompare(start);
+                end = convertDateToCompare(end);
+                deadlineDate = convertDateToCompare(item.jobExtend.deadline);
+                return deadlineDate.getTime() >= start.getTime() && deadlineDate.getTime() <= end.getTime();
+            }).slice(0, 10);
             res.json(finalResults);
         })
         .catch(err => res.json(err));
 });
 
 /* GET ONE JOB BY ID */
-router.get('/job/get_one_job_by_id/:id', function (req, res, next) {
-    getOneJobById(req.params.id).exec()
+router.get('/job/get_job_by_id/:id', function (req, res, next) {
+    getJobById(req.params.id).exec()
         .then(job => res.json(job))
         .catch(err => res.json(err));
 });

@@ -4,7 +4,11 @@ var router = express.Router();
 var JobType = require('../models/JobType');
 var Job = require('../models/Job');
 
-const { getAllJobTypes } = require('../services/JobTypeService');
+const {
+    getAllJobTypes,
+    getJobTypeById,
+    createJobType
+} = require('../services/JobTypeService');
 
 /* GET ALL JOBTYPES */
 router.get('/jobtype/get_all_jobtypes', function (req, res, next) {
@@ -15,20 +19,19 @@ router.get('/jobtype/get_all_jobtypes', function (req, res, next) {
 });
 
 /* GET ONE JOBTYPE BY ID */
-router.get('/jobtype/get_one_jobtype_by_id/:id', function (req, res, next) {
-    JobType.findById(req.params.id, function (err, jobtype) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true, jobtype: jobtype });
-    }).populate('jobs');
+router.get('/jobtype/get_jobtype_by_id/:id', function (req, res, next) {
+    getJobTypeById(req.params.id)
+        .exec()
+        .then(jobType => res.json(jobType))
+        .catch(err => res.json(err));
 });
 
 
 // CREATE NEW JOBTYPE
 router.post('/jobtype/create_jobtype', function (req, res, next) {
-    JobType.create(req.body, function (err) {
-        if (err) return res.json({ success: false, err: err });
-        res.json({ success: true });
-    });
+    createJobType(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
 });
 
 /* UPDATE JOBTYPE */
