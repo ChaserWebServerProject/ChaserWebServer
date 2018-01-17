@@ -1,6 +1,15 @@
 $green:#33CC66;
 $gray:#f6f6f6;
 
+.job-form-modal-container .modal{
+  top: 6%;
+}
+
+.job-form-modal-container #deadline {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
 //form
 *{
     box-sizing: border-box;
@@ -59,7 +68,7 @@ select option{
 }
 
 .k-list-filter>.k-icon{
-  top:60%;
+  top:53%;
 }
 
 .k-dropdown-wrap{

@@ -1,0 +1,28 @@
+$green:#33CC66;
+$green2:#33CC99;
+$gray:#666666;
+$gray2:#555555;
+$gray3:#999999;
+
+.pagination-container a{
+    cursor: pointer;
+}
+
+.pagination-container .page-item.active .page-link {
+    background-color: $green !important;
+    border: solid 1px $green2;
+}
+
+.pagination-container li:not(.disabled) i{
+    color: $gray;
+}
+
+.pagination-container .disabled{
+    color: $gray3!important;
+}
+
+.pagination-container{
+    justify-content: center;
+    align-items: center;
+}
+

@@ -21,7 +21,7 @@ export default class JobGrid extends Component {
             dataSource: {
                 transport: {
                     read: {
-                        url: "/service/job/get_all_jobs",
+                        url: "/service/job/get_all_jobs_for_job_grid",
                         dataType: "json",
                         type: 'GET'
                     },
@@ -40,7 +40,7 @@ export default class JobGrid extends Component {
                             "city.cityName": { type: 'string' },
                             "city.province.provinceName": { type: 'string' },
                             "dateCreated": { type: 'date' },
-                            "jobExtend.deadline": { type: "date" },
+                            "deadline": { type: "date" },
                         }
                     }
                 },
@@ -136,7 +136,7 @@ export default class JobGrid extends Component {
                     }
                 },
                 {
-                    field: 'jobExtend.deadline',
+                    field: 'deadline',
                     title: "Hạn nộp",
                     format: "{0:dd/MM/yyyy}",
                     attributes: {

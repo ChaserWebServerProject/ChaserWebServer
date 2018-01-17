@@ -4,11 +4,10 @@ var async = require('async');
 var Job = require('../models/Job');
 var JobExtend = require('../models/JobExtend');
 const {
-    getAllJobs,
-    getJobById,
-    createJob,
-    updateJob,
-    deleteJob
+    getAllJobs, getJobById, createJob, updateJob, deleteJob,
+    filterJobByJobTypeAndProvinceOrderId, filterJobByJobTypeOrderId,
+    filterJobByProvinceOrderId, filterJobBySearchContent,
+    increase_views, markJob, unMarkJob
 } = require('../services/JobService');
 const {
     convertDateToCompare
@@ -16,8 +15,25 @@ const {
 
 /* GET ALL JOBS */
 router.get('/job/get_all_jobs', (req, res, next) => {
-    getAllJobs().exec()
+    getAllJobs()
+        .exec()
         .then(jobs => res.json(jobs))
+        .catch(err => res.json(err));
+});
+
+/* GET ALL JOBS FOR JOB GRID */
+router.get('/job/get_all_jobs_for_job_grid', (req, res, next) => {
+    getAllJobs()
+        .sort({ dateCreated: 'desc' })
+        .exec()
+        .then(jobs => {
+            let finalResults = JSON.parse(JSON.stringify(jobs));
+            finalResults = finalResults.map(job => {
+                job.deadline = job.jobExtend.deadline;
+                return job;
+            });
+            res.json(finalResults)
+        })
         .catch(err => res.json(err));
 });
 
@@ -61,6 +77,21 @@ router.get('/job/get_ten_hurry_jobs', function (req, res, next) {
         .catch(err => res.json(err));
 });
 
+/* GET JOB BY JOBTYPE ORDER ID */
+/* MOBILE APP */
+router.get('/job/get_job_by_jobtype_orderid/:orderId', function (req, res, next) {
+    getAllJobs()
+        .sort({ dateCreated: 'desc' })
+        .select('jobName orderId dateCreated')
+        .exec()
+        .then(jobs => {
+            const orderId = req.params.orderId;
+            const finalResults = filterJobByJobTypeOrderId(jobs, orderId);
+            res.json(finalResults);
+        })
+        .catch(err => res.json(err));
+});
+
 /* GET ONE JOB BY ID */
 router.get('/job/get_job_by_id/:id', function (req, res, next) {
     getJobById(req.params.id).exec()
@@ -68,10 +99,60 @@ router.get('/job/get_job_by_id/:id', function (req, res, next) {
         .catch(err => res.json(err));
 });
 
+/* SEARCH JOB BY SEARCH URL QUERIES USE POST METHOD */
+router.post('/job/search_jobs_by_url_queries', function (req, res, next) {
+    getAllJobs()
+        .exec()
+        .then(jobs => {
+            const params = req.body;
+            const { jobType, province, name } = params;
+            const searchName = name ? name.trim() : '';
+            let finalResults = [];
+            if (province) {
+                if (jobType) {
+                    finalResults = filterJobByJobTypeAndProvinceOrderId(jobs, jobType, province);
+                    finalResults = filterJobBySearchContent(finalResults, searchName);
+                } else {
+                    finalResults = filterJobByProvinceOrderId(jobs, province);
+                    finalResults = filterJobBySearchContent(finalResults, searchName);
+                }
+            } else {
+                if (jobType) {
+                    finalResults = filterJobByJobTypeOrderId(jobs, jobType);
+                    finalResults = filterJobBySearchContent(finalResults, searchName);
+                } else {
+                    finalResults = filterJobBySearchContent(jobs, searchName);
+                }
+            }
+            return res.json(finalResults);
+        })
+        .catch(err => res.json(err));
+});
 
 // CREATE NEW JOB
 router.post('/job/create_job', (req, res, next) => {
     createJob(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
+});
+
+/* INCREASE VIEWS OF JOB */
+router.put('/job/increase_views/:id', function (req, res, next) {
+    increase_views(req.params.id)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
+});
+
+/* MARK JOB */
+router.put('/job/mark_job', function (req, res, next) {
+    markJob(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
+});
+
+/* UNMARK JOB */
+router.put('/job/un_mark_job', function (req, res, next) {
+    unMarkJob(req)
         .then(result => res.json({ success: result }))
         .catch(err => res.json({ success: false, err: err }));
 });

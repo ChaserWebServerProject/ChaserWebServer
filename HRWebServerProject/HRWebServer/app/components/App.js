@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import { Switch, Redirect } from 'react-router'
+import { Route, Switch } from 'react-router-dom';
 
 import HomePage from 'HomePage';
-import Employer from 'Employer'
+import EmployerPage from 'EmployerPage'
 import TopNav from 'TopNav';
 import Footer from 'Footer';
 import ImageBox from 'ImageBox';
 import Error404Page from 'Error404Page';
+import ResultJobSearchPage from 'ResultJobSearchPage';
+import JobDetailPage from 'JobDetailPage';
 
 import '../../public/content/css/app.scss';
 
@@ -18,8 +19,10 @@ export default class App extends Component {
                 <TopNav />
                 <Switch>
                     <Route exact path="/" component={HomePage} />
-                    <Route exact path="/employer" component={Employer} />
-                    <Route exact path="*" component={Error404Page} />
+                    <Route exact path='/vieclam/:content' component={ResultJobSearchPage} />
+                    <Route exact path="/nhatuyendung" component={EmployerPage} />
+                    <Route exact path="/chitietcongviec/:id" component={JobDetailPage} />
+                    <Route path="*" component={Error404Page} />
                 </Switch>
                 <ImageBox />
                 <Footer />

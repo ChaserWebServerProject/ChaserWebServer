@@ -1,24 +1,24 @@
-var async = require('async');
+const async = require('async');
 
-var JobType = require('../models/JobType');
-var Job = require('../models/Job');
-var JobExtend = require('../models/JobExtend');
-var City = require('../models/City');
-var JobType = require('../models/JobType');
-var User = require('../models/User');
-var Company = require('../models/Company');
-var Province = require('../models/Province');
+const JobType = require('../models/JobType');
+const Job = require('../models/Job');
+const JobExtend = require('../models/JobExtend');
+const City = require('../models/City');
+const User = require('../models/User');
+const Company = require('../models/Company');
+const Province = require('../models/Province');
+const Notification = require('../models/Notification');
 
 const getAllJobs = () => {
     return Job.find()
         .populate('jobExtend', 'position deadline salary graduation workType amount genderRequirement')
-        .populate('jobType', 'jobTypeName')
+        .populate('jobType', 'orderId jobTypeName')
         .populate({
             path: 'city',
-            select: 'cityCode cityName',
+            select: 'orderId cityCode cityName',
             populate: {
                 path: 'province',
-                select: 'provinceCode provinceName'
+                select: 'orderId provinceCode provinceName'
             }
         })
         .populate({
@@ -32,7 +32,10 @@ const getAllJobs = () => {
 
 const getJobById = (id) => {
     return Job.findById(id)
-        .populate('jobExtend', 'position deadline salary graduation workType amount genderRequirement')
+        .populate('jobExtend',
+        `position deadline salary graduation 
+        workType amount genderRequirement experience 
+        description requirement benefit contact`)
         .populate('jobType', 'jobTypeName')
         .populate({
             path: 'city',
@@ -55,6 +58,7 @@ const createJob = (req) => {
     return new Promise(async (resolve, reject) => {
         const job = new Job(req.body.job);
         const jobExtend = new JobExtend(req.body.job_extend);
+        const noti = new Notification();
         job.jobExtend = jobExtend._id;
         jobExtend.job = job._id;
 
@@ -86,6 +90,33 @@ const createJob = (req) => {
             (callback) => {
                 City.findByIdAndUpdate(job.city, { $push: { jobs: job.id } })
                     .then(() => callback(null))
+                    .catch(err => reject(err));
+            },
+            (callback) => {
+                //add notification
+                noti.save()
+                    .then(() => callback(null))
+                    .catch(err => reject(err));
+            },
+            (callback) => {
+                User.find()
+                    .then(users => callback(null, users))
+                    .catch(err => reject(err));
+            },
+            (users, callback) => {
+                getJobById(job._id)
+                    .then(job => callback(null, users, job))
+                    .catch(err => reject(err));
+            },
+            (users, job, callback) => {
+                Notification.findByIdAndUpdate(noti._id,
+                    {
+                        $push: { 'receivers': { '$each': users } },
+                        message: `Công ty ${job.user.company.companyName} đang tuyển dụng 
+                        "${job.jobName.toLowerCase()}"`,
+                        job: job
+                    }
+                ).then(() => callback(null))
                     .catch(err => reject(err));
             },
         ], (err, result) => {
@@ -186,4 +217,87 @@ const deleteJob = (req) => {
     });
 };
 
-module.exports = { getAllJobs, getJobById, createJob, updateJob, deleteJob };
+const increase_views = (id) => {
+    return new Promise((resolve, reject) => {
+        Job.findById(id)
+            .then(job => {
+                job.views = job.views + 1;
+                job.save()
+                    .then(() => resolve(true))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
+}
+
+const markJob = (req) => {
+    return new Promise((resolve, reject) => {
+        const id = req.body.jobId,
+            user = req.body.userId;
+        Job.findByIdAndUpdate(id, { $push: { markedUsers: user } })
+            .then(() => {
+                User.findByIdAndUpdate(user, { $push: { markedJobs: id } })
+                    .then(() => resolve(true))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
+}
+
+const unMarkJob = (req) => {
+    return new Promise((resolve, reject) => {
+        const id = req.body.jobId,
+            user = req.body.userId;
+        Job.findByIdAndUpdate(id, { $pull: { markedUsers: user } })
+            .then(() => {
+                User.findByIdAndUpdate(user, { $pull: { markedJobs: id } })
+                    .then(() => resolve(true))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
+}
+
+const filterJobByProvinceOrderId = (jobs, provinceOrderId) => {
+    let orderProvince;
+    const result = jobs.filter((job) => {
+        orderProvince = job.city.province.orderId;
+        return orderProvince == provinceOrderId;
+    });
+    return result;
+}
+
+const filterJobByJobTypeOrderId = (jobs, jobTypeOrderId) => {
+    let orderType;
+    const result = jobs.filter((job) => {
+        orderType = job.jobType.orderId;
+        return orderType == jobTypeOrderId;
+    });
+    return result;
+}
+
+const filterJobByJobTypeAndProvinceOrderId = (jobs, jobTypeOrderId, provinceOrderId) => {
+    let orderType, orderProvince;
+    const result = jobs.filter((job) => {
+        orderType = job.jobType.orderId;
+        orderProvince = job.city.province.orderId;
+        return orderType == jobTypeOrderId && orderProvince == provinceOrderId;
+    });
+    return result;
+}
+
+const filterJobBySearchContent = (jobs, name) => {
+    let jobName;
+    const result = jobs.filter((job) => {
+        jobName = job.jobName.trim().toLowerCase();
+        return jobName.includes(name.trim().toLowerCase());
+    });
+    return result;
+}
+
+module.exports = {
+    getAllJobs, getJobById, createJob, updateJob, deleteJob,
+    filterJobByProvinceOrderId, filterJobByJobTypeOrderId,
+    filterJobByJobTypeAndProvinceOrderId, filterJobBySearchContent,
+    increase_views, markJob, unMarkJob
+};

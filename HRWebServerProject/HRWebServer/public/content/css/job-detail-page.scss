@@ -1,0 +1,71 @@
+$text-12: 13px;
+$gray:#888888;
+$black:#444444;
+
+.job-detail-page-container{
+    padding-top: 57px;
+}
+
+.job-detail-page-container .top-section, .middle-section, .bottom-section{
+    padding: 30px;
+    background-color: white;
+    margin: 20px 0px 20px 0px;
+}
+
+
+.job-detail-page-container .top-section h5{
+    margin-bottom: 0.25rem;
+    color: $black;
+}
+
+.job-detail-page-container .top-section h6{
+    // margin-bottom: 0.25rem;
+    color: $gray;
+}
+
+.job-detail-page-container p{
+    font-size: $text-12;
+    margin: 0px;
+}
+
+.job-detail-page-container .job-name, .company-name{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.job-detail-page-container .middle-section .d-flex{
+    padding: 2px 0px 2px 0px;
+}
+
+.job-detail-page-container .middle-section p{
+    padding: 0px 4px 0px 4px
+}
+
+.job-detail-page-container .middle-section i{
+    // padding:  0px 2px 0px 2px;
+    padding: 1px;
+}
+
+.job-detail-page-container .middle-section .icon-container{
+    width: 19px;
+}
+
+.job-detail-page-container .bottom-section .content{
+    padding: 0 20px 0px 20px;
+}
+
+.job-detail-page-container .bottom-section .bot-item{
+    padding: 20px;
+}
+
+.job-detail-page-container .bottom-section p::before{
+    // content: "- "
+}
+
+@media only screen and (max-width:576px) {
+    .job-detail-page-container .top-section .time-view-container{
+        display: block!important;
+    }
+}
+

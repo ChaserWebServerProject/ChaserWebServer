@@ -29,7 +29,7 @@ router.get('/company/get_company_by_id/:id', function (req, res, next) {
 
 /* GET ONE COMPANY BY USER ID */
 router.get('/company/get_one_company_by_user_id', function (req, res, next) {
-    const userId = "5a4e0dc781611a3254ab2473";
+    const userId = "5a4e18d07b78182d0855d166";
     getOneCompanyByUserId(userId)
         .exec()
         .then(company => {

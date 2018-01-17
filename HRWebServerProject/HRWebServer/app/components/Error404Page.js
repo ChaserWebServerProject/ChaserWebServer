@@ -14,7 +14,7 @@ export default class Error404Page extends Component {
                     <div className="nav-agileinfo">
                         <ul>
                             <li><Link to="/">Trang chủ</Link></li>
-                            <li><Link to="/employer">Nhà tuyển dụng</Link></li>
+                            <li><Link to="/nhatuyendung">Nhà tuyển dụng</Link></li>
                             {/* <li><a href="#">Trang chủ</a></li>
                             <li><a href="#">Nhà tuyển dụng</a></li> */}
                             {/* <li><a href="#">Work</a></li>

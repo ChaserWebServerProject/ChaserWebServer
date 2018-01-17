@@ -18,7 +18,7 @@ export default class TopNav extends Component {
                 <NavLink exact to="/" activeClassName="active">Trang chủ</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/employer" activeClassName="active">Nhà tuyển dụng</NavLink>
+                <NavLink to="/nhatuyendung" activeClassName="active">Nhà tuyển dụng</NavLink>
               </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
@@ -37,5 +37,15 @@ export default class TopNav extends Component {
         </nav>
       </div>
     );
+  }
+
+  onAddJqueryEvents() {
+    $('a').on('click', function () {
+      $('.navbar-collapse').removeClass('show');
+    });
+  }
+
+  componentDidMount() {
+    this.onAddJqueryEvents();
   }
 }

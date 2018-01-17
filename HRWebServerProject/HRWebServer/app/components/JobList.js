@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import '../../public/content/css/job-list.scss';
 import { formatDate } from '../../util/Util';
@@ -42,17 +43,30 @@ export default class JobList extends Component {
                             <hr />
                             <div className="row job-item">
                                 <div className="col-xs-12 col-sm-6 job-title">
-                                    <p><i className="fa fa-suitcase" aria-hidden="true"></i> {job.jobExtend.position}</p>
-                                    <p><a href={"#" + job.user.company._id} className="company-name"><i className="fa fa-building" aria-hidden="true"></i> <strong>{job.user.company.companyName}</strong></a></p>
+                                    <p>
+                                        <Link to={`/chitietcongviec/chi-tiet?jobId=${job._id}`} className="job-name">
+                                            <i className="fa fa-suitcase" aria-hidden="true"></i> <strong>{job.jobName}</strong></Link>
+                                    </p>
+                                    <p>
+                                        <a href="#" className="company-name">
+                                            <i className="fa fa-building" aria-hidden="true"></i> <strong>{job.user.company.companyName}</strong>
+                                        </a>
+                                    </p>
                                 </div>
                                 <div className="col-xs-4 col-sm-2">
-                                    <p className="text-center"><i className="fa fa-usd" aria-hidden="true"></i> {job.jobExtend.salary}</p>
+                                    <p className="text-center">
+                                        <i className="fa fa-usd" aria-hidden="true"></i> {job.jobExtend.salary}
+                                    </p>
                                 </div>
                                 <div className="col-xs-4 col-sm-2">
-                                    <p className="text-center"><i className="fa fa-map-marker" aria-hidden="true"></i> {job.city.province.provinceName}</p>
+                                    <p className="text-center">
+                                        <i className="fa fa-map-marker" aria-hidden="true"></i> {job.city.province.provinceName}
+                                    </p>
                                 </div>
                                 <div className="col-xs-4 col-sm-2">
-                                    <p className="text-center"><i className="fa fa-calendar" aria-hidden="true"></i> {formatDate(new Date(job.jobExtend.deadline))}</p>
+                                    <p className="text-center">
+                                        <i className="fa fa-calendar" aria-hidden="true"></i> {formatDate(new Date(job.jobExtend.deadline))}
+                                    </p>
                                 </div>
                             </div>
                         </div>)

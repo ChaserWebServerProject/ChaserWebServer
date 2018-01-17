@@ -52,8 +52,24 @@ const createUser = (req) => {
 
     });
 }
+
+const getUserByUserNameAndPassword = (req) => {
+    return User.findOne({ userName: req.body.userName, passwordHash: req.body.passwordHash });
+}
+
+const login = (req) => {
+    return new Promise((resolve, reject) => {
+        getUserByUserNameAndPassword(req)
+            .exec()
+            .then(user => resolve(user))
+            .catch(err => reject(err));
+    });
+}
+
 module.exports = {
     getAllUsers,
     getUserById,
-    createUser
+    createUser,
+    login,
+    getUserByUserNameAndPassword
 }

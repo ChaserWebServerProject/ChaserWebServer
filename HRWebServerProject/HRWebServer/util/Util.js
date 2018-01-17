@@ -40,8 +40,21 @@ const convertDateToCompare = (d) => {
     return date;
 }
 
+const splitStr = (str, option) => {
+    return str.split(option);
+}
+
+const joinToStr = (strArr, option) => {
+    return strArr.join(option);
+}
+
+const toLowerCase = () => {
+    
+}
 module.exports = {
     formatDate,
     formatDateYYMMDD,
-    convertDateToCompare
+    convertDateToCompare,
+    splitStr,
+    joinToStr
 }

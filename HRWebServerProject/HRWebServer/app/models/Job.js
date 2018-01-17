@@ -16,7 +16,7 @@ var JobSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    view: {
+    views: {
         type: Number,
         default: 0
     },

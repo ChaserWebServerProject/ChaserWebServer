@@ -24,7 +24,13 @@ var jobExtendSchema = new Schema({
     graduation: {
         type: String,
         required: [true, 'Học vấn không được bỏ trống.'],
-        maxlength: 400,
+        maxlength: 100,
+        trim: true
+    },
+    experience: {
+        type: String,
+        required: [true, 'Kinh nghiệm không được bỏ trống.'],
+        maxlength: 100,
         trim: true
     },
     workType: {
@@ -45,6 +51,30 @@ var jobExtendSchema = new Schema({
             values: ['M', 'F', 'NR'],
             message: 'Yêu cầu giới tính phải được chọn.'
         },
+        trim: true
+    },
+    description: {
+        type: String,
+        required: [true, 'Mô tả công việc không được bỏ trống.'],
+        maxlength: 4000,
+        trim: true
+    },
+    requirement: {
+        type: String,
+        required: [true, 'Yêu cầu công việc không được bỏ trống.'],
+        maxlength: 4000,
+        trim: true
+    },
+    benefit: {
+        type: String,
+        required: [true, 'Quyền lợi hợp tác không được bỏ trống.'],
+        maxlength: 4000,
+        trim: true
+    },
+    contact: {
+        type: String,
+        required: [true, 'Thông tin liên hệ không được bỏ trống.'],
+        maxlength: 4000,
         trim: true
     },
     job: {

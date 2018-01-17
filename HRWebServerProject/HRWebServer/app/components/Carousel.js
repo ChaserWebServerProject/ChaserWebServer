@@ -3,6 +3,19 @@ import React, { Component } from 'react';
 import '../../public/content/css/carousel.scss';
 
 export default class Carousel extends Component {
+
+    componentWillMount() {
+        this.onCreateClock();
+    }
+
+    onCreateClock() {
+        this.myClock = setInterval(function () {
+            var d = new Date();
+            var t = d.toLocaleTimeString();
+            document.getElementById("timer").innerHTML = t;
+        }, 1000);
+    }
+
     render() {
         return (
             <div id="home-carousel" className="carousel slide" data-ride="carousel">
@@ -40,12 +53,7 @@ export default class Carousel extends Component {
     }
 
     componentDidMount() {
-        function myTimer() {
-            var d = new Date();
-            var t = d.toLocaleTimeString();
-            document.getElementById("timer").innerHTML = t;
-        }
-        this.myClock = setInterval(function () { myTimer() }, 1000);
+
     }
 
     componentWillUnmount() {

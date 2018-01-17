@@ -1,14 +1,16 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-var userController = require('./app/controllers/UserController');
-var provinceController = require('./app/controllers/ProvinceController');
-var cityContronller = require('./app/controllers/CityContronller');
-var jobTypeController = require('./app/controllers/JobTypeController');
-var jobController = require('./app/controllers/JobController');
-var companyController = require('./app/controllers/CompanyController');
+const userController = require('./app/controllers/UserController');
+const provinceController = require('./app/controllers/ProvinceController');
+const cityContronller = require('./app/controllers/CityContronller');
+const jobTypeController = require('./app/controllers/JobTypeController');
+const jobController = require('./app/controllers/JobController');
+const companyController = require('./app/controllers/CompanyController');
+const notificationController = require('./app/controllers/NotificationController');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 'extended': 'false' }));
@@ -18,18 +20,14 @@ app.use(express.static('public'));
 
 app.use('/service',
     [
-        userController,
-        provinceController,
-        cityContronller,
-        jobTypeController,
-        jobController,
-        companyController
+        userController, provinceController, cityContronller, jobTypeController,
+        jobController, companyController, notificationController
     ]
 );
 
 var databaseUri = 'mongodb://localhost/human_resource_db';
 mongoose.Promise = global.Promise;
-mongoose.connect(databaseUri, { useMongoClient: true })
+mongoose.connect(databaseUri)
     .then(() => console.log('connection successful'))
     .catch((err) => console.error(err));
 

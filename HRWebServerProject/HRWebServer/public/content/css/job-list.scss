@@ -1,6 +1,7 @@
 $text-size-12: 12px;
 $text-size-13:13px;
 $gray: #aaaa;
+$green:#33CC66;
 
 .job-list-content p{
     display: block;
@@ -15,14 +16,22 @@ $gray: #aaaa;
 }
 
 .job-item-container{
-    padding-bottom: 10px;
+    // padding-bottom: 10px;
 }
 
-.company-name{
-    color: royalblue;
+.job-item-container .job-name{
+    text-decoration: none;
+    color: firebrick;
+}
+
+.job-item-container .job-name:hover{
+    color: crimson;
+}
+
+.job-item-container .company-name{
+    color: $green;
     text-decoration-style: solid;
-    text-decoration-color: royalblue;
-    text-decoration-line: underline;
+    // text-decoration-color: royalblue;
     padding: 0;
 }
 
@@ -31,13 +40,14 @@ $gray: #aaaa;
 }
 
 .job-header{
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 23px;
+    padding-bottom: 15px;
     padding-left: 15px;
 }
 
 .job-header p{
     font-weight: bold;
+    font-size: $text-size-13;
 }
 
 .job-item{
@@ -54,6 +64,17 @@ $gray: #aaaa;
 
 .job-item i{
     color: initial !important;
+}
+
+@media only screen and(min-width:576px){
+    .job-item .col-sm-2{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .job-header .col-sm-2{
+        padding: 0px;
+    }
 }
 
 @media only screen and (max-width:576px){

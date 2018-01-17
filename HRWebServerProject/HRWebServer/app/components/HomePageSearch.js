@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
 import { DropDownList } from '@progress/kendo-dropdowns-react-wrapper';
 import axios from 'axios';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 
 import '../../public/content/css/home-page-search.scss';
 
-import { provinceDropOptions, jobTypeDropOptions } from '../kendo_ui_options/DropDownListOptions';
+import {
+    splitStr,
+    joinToStr
+} from '../../util/Util';
+import {
+    provinceDropOptions,
+    jobTypeDropOptions
+} from '../kendo_ui_options/DropDownListOptions';
 
-export default class HomePageSearch extends Component {
+class HomePageSearch extends Component {
     constructor(props) {
         super(props);
         this.initialState = {
-            province: null,
-            jobType: null,
-            seacrhContent: ''
+            province: '',
+            jobType: '',
+            name: ''
         };
         this.state = this.initialState;
+        this.history = this.props.history;
     }
 
     componentWillMount() {
@@ -22,8 +31,22 @@ export default class HomePageSearch extends Component {
     }
 
     onCreateDropDownOptions() {
-        this.jobTypeDropOptions = jobTypeDropOptions;
-        this.provinceDropOptions = provinceDropOptions;
+        //custom options jobtype dropdown
+        const jobTypeCustomOptions = { ...jobTypeDropOptions };
+        jobTypeCustomOptions.dataValueField = 'orderId';
+        jobTypeCustomOptions.optionLabel = {
+            jobTypeName: 'Chọn ngành nghề',
+            orderId: ''
+        }
+        this.jobTypeDropOptions = jobTypeCustomOptions;
+        //custom options province dropdown
+        const provinceCustomOptions = { ...provinceDropOptions };
+        provinceCustomOptions.dataValueField = 'orderId';
+        provinceCustomOptions.optionLabel = {
+            provinceName: 'Chọn nơi làm việc',
+            orderId: ''
+        }
+        this.provinceDropOptions = provinceCustomOptions;
     }
 
     handleInputChange(newValue) {
@@ -33,9 +56,43 @@ export default class HomePageSearch extends Component {
         }));
     }
 
-    onSubmitSearchForm(e){
+    onSubmitSearchForm(e) {
         e.preventDefault();
-        console.log(this.state);
+        const { jobType, province, name } = this.state;
+        const jobTypeText = this.jobTypeDrop.text().trim().toLowerCase();
+        const provinceText = this.provinceDrop.text().trim().toLowerCase();
+        if (jobType && province && !name.trim()) {
+            this.history.push({
+                pathname: `/vieclam/việc-làm-${joinToStr(splitStr(jobTypeText, " "), "-")}-tại-${joinToStr(splitStr(provinceText, " "), "-")}`,
+                search: `?jobType=${jobType}&province=${province}`,
+                state: {
+
+                }
+            });
+        } else
+            if (jobType && !province && !name.trim()) {
+                this.history.push({
+                    pathname: `/vieclam/việc-làm-${joinToStr(splitStr(jobTypeText, " "), "-")}`,
+                    search: `?jobType=${jobType}`,
+                    state: {
+
+                    }
+                });
+            } else
+                if (province && !jobType && !name.trim()) {
+                    this.history.push({
+                        pathname: `/vieclam/việc-làm-tại-${joinToStr(splitStr(provinceText, " "), "-")}`,
+                        search: `?province=${province}`,
+                        state: {
+
+                        }
+                    });
+                } else {
+                    this.history.push({
+                        pathname: '/vieclam/tim-kiem',
+                        search: `?name=${encodeURIComponent(name)}&jobType=${jobType}&province=${province}`,
+                    });
+                }
     }
 
     render() {
@@ -52,7 +109,7 @@ export default class HomePageSearch extends Component {
                                     className="form-control"
                                     placeholder="Nhập công việc, vị trí, ..."
                                     onChange={(e) => this.handleInputChange({
-                                        seacrhContent: e.target.value
+                                        name: e.target.value
                                     })}
                                 />
                             </div>
@@ -60,25 +117,26 @@ export default class HomePageSearch extends Component {
                                 <DropDownList
                                     widgetRef={widget => this.jobTypeDrop = widget}
                                     change={(e) => this.handleInputChange({
-                                        jobType: e.sender.value() ? e.sender.value() : null
+                                        jobType: e.sender.value()
                                     })}
                                     className="form-control"
                                     {...this.jobTypeDropOptions} />
-                                {/* <select className="form-control" /> */}
                             </div>
                             <div className="div-select d-flex">
                                 <DropDownList
                                     className="form-control"
                                     widgetRef={widget => this.provinceDrop = widget}
                                     change={(e) => this.handleInputChange({
-                                        province: e.sender.value() ? e.sender.value() : null
+                                        province: e.sender.value()
                                     })}
                                     {...this.provinceDropOptions}
                                 />
-                                {/* <select className="form-control" /> */}
                             </div>
                             <div className="div-btn">
-                                <button type="submit" className="btn btn-success btn-search"><i className="fa fa-search"></i></button>
+                                <button type="submit"
+                                    className="btn btn-success btn-search">
+                                    <i className="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -95,3 +153,5 @@ export default class HomePageSearch extends Component {
         this.onAddAttributes();
     }
 }
+
+export default withRouter(HomePageSearch);

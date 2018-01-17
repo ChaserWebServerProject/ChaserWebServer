@@ -9,8 +9,13 @@ $green:#33CC66;
     width: 100%;
 }
 
+.homepage-btn-container .btn{
+    background-color: white;
+    border: solid 1px $green;
+}
+
 .homepage-btn-container{
-    overflow: auto;
+    // overflow: auto;
     display: flex;
     justify-content: center;
 }
@@ -55,7 +60,7 @@ $green:#33CC66;
 .homepage-btn-container .btn {
     padding-top: 7px;
     padding-bottom: 7px;
-    width: 50%;
+    width: 20%;
     font-weight: 500;
 }
 

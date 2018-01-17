@@ -1,4 +1,5 @@
 var path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: './app/app.js',
@@ -14,7 +15,7 @@ module.exports = {
             'HomePageSearch': path.resolve(__dirname, './app/components/HomePageSearch'),
             'Carousel': path.resolve(__dirname, './app/components/Carousel'),
             'JobList': path.resolve(__dirname, './app/components/JobList'),
-            'Employer': path.resolve(__dirname, './app/components/Employer'),
+            'EmployerPage': path.resolve(__dirname, './app/components/EmployerPage'),
             'Footer': path.resolve(__dirname, './app/components/Footer'),
             'BreadCrumb': path.resolve(__dirname, './app/components/BreadCrumb'),
             'AppAdvertisement': path.resolve(__dirname, './app/components/AppAdvertisement'),
@@ -22,8 +23,11 @@ module.exports = {
             'App': path.resolve(__dirname, './app/components/App'),
             'JobFormModal': path.resolve(__dirname, './app/components/JobFormModal'),
             'ImageBox': path.resolve(__dirname, './app/components/ImageBox'),
-            'JobGrid': path.resolve(__dirname, './app/components/JobGrid'),            
-            'Error404Page': path.resolve(__dirname, './app/components/Error404Page'),            
+            'JobGrid': path.resolve(__dirname, './app/components/JobGrid'),
+            'Error404Page': path.resolve(__dirname, './app/components/Error404Page'),
+            'ResultJobSearchPage': path.resolve(__dirname, './app/components/ResultJobSearchPage'),
+            'Pagination': path.resolve(__dirname, './app/components/Pagination'),
+            'JobDetailPage': path.resolve(__dirname, './app/components/JobDetailPage'),
         },
         extensions: ['.js', '.jsx'],
     },
@@ -65,5 +69,10 @@ module.exports = {
     },
     devServer: {
         historyApiFallback: true
-    }
+    },
+    plugins: [
+        new CopyWebpackPlugin([
+            { from: './img/local_img', to: './img' },
+        ]),
+    ]
 };

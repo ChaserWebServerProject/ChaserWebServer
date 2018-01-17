@@ -34,20 +34,19 @@ export default class HomePage extends Component {
         function getTenNewJobs() {
             return axios.get('/service/job/get_ten_new_jobs');
         }
-
         function getTenHurryJobs() {
             return axios.get('/service/job/get_ten_hurry_jobs');
         }
-
         const _this = this;
-
+        $.blockUI();
         axios.all([getTenNewJobs(), getTenHurryJobs()])
             .then(axios.spread(function (resNew, resHurry) {
                 const newJobs = resNew.data.length ? resNew.data : [];
                 const hurryJobs = resHurry.data.length ? resHurry.data : [];
                 _this.setState({ newJobs, hurryJobs });
             }))
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
+            .then(() => $.unblockUI());
     }
 
     render() {
@@ -62,22 +61,28 @@ export default class HomePage extends Component {
                 <div className="container list-container">
                     <div className="row">
                         <div className="col-md-9 homepage-left-section">
-                            <h4 className="section-title">Tuyển gấp</h4>
-                            <JobList jobs={hurryJobs} />
+                            <div>
+                                <h4 className="section-title">Tuyển gấp</h4>
+                                <JobList jobs={hurryJobs} />
+                            </div>
                             <div className="form-group homepage-btn-container">
-                                <button className="btn btn-sm btn-success">
+                                <button className="btn btn-sm">
                                     <i className="fa fa-hand-o-right" aria-hidden="true" /> Xem thêm
                                 </button>
                             </div>
-                            <h4 className="section-title">Việc làm mới nhất</h4>
-                            <JobList jobs={newJobs} />
+                            <div>
+                                <h4 className="section-title">Việc làm mới nhất</h4>
+                                <JobList jobs={newJobs} />
+                            </div>
                             <div className="form-group homepage-btn-container">
-                                <button className="btn btn-sm btn-success">
+                                <button className="btn btn-sm">
                                     <i className="fa fa-hand-o-right" aria-hidden="true" /> Xem thêm
                                 </button>
                             </div>
-                            <h4 className="section-title">Tổng hợp ngành nghề</h4>
-                            <JobList jobs={newJobs} />
+                            {/* <div>
+                                <h4 className="section-title">Tổng hợp ngành nghề</h4>
+                                <JobList jobs={newJobs} />
+                            </div> */}
                         </div>
                         <div className="col-md-3 homepage-right-section">
                             <h4 className="section-title"><p>Giới thiệu ứng dụng</p></h4>
