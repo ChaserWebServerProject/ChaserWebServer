@@ -73,7 +73,11 @@ var userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'company',
         default: null
-    }
+    },
+    joinedJobs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'job'
+    }]
     // province: { type: Number, ref: 'province' },
     // userExtend: { type: String, ref: 'user_extend' }
 });

@@ -25,11 +25,11 @@ app.use('/service',
     ]
 );
 
-var databaseUri = 'mongodb://localhost/human_resource_db';
+var databaseUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/human_resource_db';
 mongoose.Promise = global.Promise;
 mongoose.connect(databaseUri)
     .then(() => console.log('connection successful'))
     .catch((err) => console.error(err));
 
-app.listen(3000, () => console.log('Server started!'));
+app.listen(process.env.PORT || 3000, () => console.log('Server started!'));
 app.get('/', (req, res) => res.render('app'));

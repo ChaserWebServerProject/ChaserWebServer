@@ -5,7 +5,9 @@ autoIncrement.initialize(mongoose.connection);
 const JobType = require('../models/JobType');
 
 var JobSchema = new Schema({
-    orderId: { type: Number },
+    orderId: {
+        type: Number
+    },
     jobName: {
         type: String,
         required: [true, 'Tên công việc không được bỏ trống.'],
@@ -41,16 +43,21 @@ var JobSchema = new Schema({
         ref: 'job_extend',
         default: null
     },
-    markedUsers:
-        [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'user'
-            }
-        ]
+    markedUsers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    }],
+    joinedUsers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    }]
 });
 
-JobSchema.plugin(autoIncrement.plugin, { model: 'job', field: 'orderId', startAt: 1 });
+JobSchema.plugin(autoIncrement.plugin, {
+    model: 'job',
+    field: 'orderId',
+    startAt: 1
+});
 
 module.exports = mongoose.model('job', JobSchema);
 
