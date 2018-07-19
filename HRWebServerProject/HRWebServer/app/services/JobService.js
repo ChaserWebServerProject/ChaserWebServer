@@ -33,7 +33,7 @@ const getAllJobs = () => {
 const getJobById = (id) => {
     return Job.findById(id)
         .populate('jobExtend',
-        `position deadline salary graduation 
+            `position deadline salary graduation 
         workType amount genderRequirement experience 
         description requirement benefit contact`)
         .populate('jobType', 'jobTypeName')
@@ -53,6 +53,43 @@ const getJobById = (id) => {
             }
         });
 };
+
+const joinToJob = (req) => {
+    return new Promise(async (resolve, reject) => {
+        const id = req.params.id;
+        const userId = req.body.userId;
+        Job.findByIdAndUpdate(id, {
+                $push: {
+                    joinedUsers: userId
+                }
+            })
+            .then(() => {
+                User.findByIdAndUpdate(userId, {
+                        $push: {
+                            joinedJobs: id
+                        }
+                    })
+                    .then(() => resolve(true))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
+}
+
+const filterJoinedUsersByAmount = (req) => {
+    return new Promise(async (resolve, reject) => {
+        const id = req.params.id;
+        const amount = req.params.amount;
+        Job.findById(id)
+            .populate('joinedUsers')
+            .then((job) => {
+                const joinedUsers = job.joinedUsers;
+                const joinedAmount = joinedUsers.slice(0, amount);
+                return resolve(joinedAmount)
+            })
+            .catch(err => reject(err));
+    });
+}
 
 const createJob = (req) => {
     return new Promise(async (resolve, reject) => {
@@ -78,17 +115,29 @@ const createJob = (req) => {
                     });
             },
             (callback) => {
-                User.findByIdAndUpdate(job.user, { $push: { createdJobs: job.id } })
+                User.findByIdAndUpdate(job.user, {
+                        $push: {
+                            createdJobs: job.id
+                        }
+                    })
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
             (callback) => {
-                JobType.findByIdAndUpdate(job.jobType, { $push: { jobs: job.id } })
+                JobType.findByIdAndUpdate(job.jobType, {
+                        $push: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
             (callback) => {
-                City.findByIdAndUpdate(job.city, { $push: { jobs: job.id } })
+                City.findByIdAndUpdate(job.city, {
+                        $push: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
@@ -109,14 +158,16 @@ const createJob = (req) => {
                     .catch(err => reject(err));
             },
             (users, job, callback) => {
-                Notification.findByIdAndUpdate(noti._id,
-                    {
-                        $push: { 'receivers': { '$each': users } },
+                Notification.findByIdAndUpdate(noti._id, {
+                        $push: {
+                            'receivers': {
+                                '$each': users
+                            }
+                        },
                         message: `Công ty ${job.user.company.companyName} đang tuyển dụng 
                         "${job.jobName.toLowerCase()}"`,
                         job: job
-                    }
-                ).then(() => callback(null))
+                    }).then(() => callback(null))
                     .catch(err => reject(err));
             },
         ], (err, result) => {
@@ -134,36 +185,58 @@ const updateJob = (req) => {
         async.waterfall([
             (callback) => {
                 //update job data
-                Job.findByIdAndUpdate(id, body, { runValidators: true })
+                Job.findByIdAndUpdate(id, body, {
+                        runValidators: true
+                    })
                     .then(async (job) => {
-                        await JobExtend.findOneAndUpdate({ job: id }, body, { runValidators: true })
+                        await JobExtend.findOneAndUpdate({
+                                job: id
+                            }, body, {
+                                runValidators: true
+                            })
                             .catch(err => reject(err));
-                        return callback(null, job);//return old job data
+                        return callback(null, job); //return old job data
                     })
                     .catch(err => reject(err));
             },
             (job, callback) => {
                 // job is old data
                 //delete old reference data
-                JobType.findByIdAndUpdate(job.jobType, { $pull: { jobs: job.id } })
+                JobType.findByIdAndUpdate(job.jobType, {
+                        $pull: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null, job))
                     .catch(err => reject(err));
             },
             (job, callback) => {
                 //delete old reference data
-                City.findByIdAndUpdate(job.city, { $pull: { jobs: job.id } })
+                City.findByIdAndUpdate(job.city, {
+                        $pull: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null, job))
                     .catch(err => reject(err));
             },
             (job, callback) => {
                 //update new references data
-                JobType.findByIdAndUpdate(body.jobType, { $push: { jobs: job.id } })
+                JobType.findByIdAndUpdate(body.jobType, {
+                        $push: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null, job))
                     .catch(err => reject(err));
             },
             (job, callback) => {
                 //update new references data                
-                City.findByIdAndUpdate(body.city, { $push: { jobs: job.id } })
+                City.findByIdAndUpdate(body.city, {
+                        $push: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
@@ -186,7 +259,9 @@ const deleteJob = (req) => {
 
         async.waterfall([
             (callback) => {
-                JobExtend.findOneAndRemove({ job: id })
+                JobExtend.findOneAndRemove({
+                        job: id
+                    })
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
@@ -196,17 +271,29 @@ const deleteJob = (req) => {
                     .catch(err => reject(err));
             },
             (job, callback) => {
-                User.findByIdAndUpdate(job.user, { $pull: { createdJobs: job.id } })
+                User.findByIdAndUpdate(job.user, {
+                        $pull: {
+                            createdJobs: job.id
+                        }
+                    })
                     .then(() => callback(null, job))
                     .catch(err => reject(err));
             },
             (job, callback) => {
-                JobType.findByIdAndUpdate(job.jobType, { $pull: { jobs: job.id } })
+                JobType.findByIdAndUpdate(job.jobType, {
+                        $pull: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null, job))
                     .catch(err => reject(err));
             },
             (job, callback) => {
-                City.findByIdAndUpdate(job.city, { $pull: { jobs: job.id } })
+                City.findByIdAndUpdate(job.city, {
+                        $pull: {
+                            jobs: job.id
+                        }
+                    })
                     .then(() => callback(null))
                     .catch(err => reject(err));
             },
@@ -234,9 +321,17 @@ const markJob = (req) => {
     return new Promise((resolve, reject) => {
         const id = req.body.jobId,
             user = req.body.userId;
-        Job.findByIdAndUpdate(id, { $push: { markedUsers: user } })
+        Job.findByIdAndUpdate(id, {
+                $push: {
+                    markedUsers: user
+                }
+            })
             .then(() => {
-                User.findByIdAndUpdate(user, { $push: { markedJobs: id } })
+                User.findByIdAndUpdate(user, {
+                        $push: {
+                            markedJobs: id
+                        }
+                    })
                     .then(() => resolve(true))
                     .catch(err => reject(err));
             })
@@ -248,9 +343,17 @@ const unMarkJob = (req) => {
     return new Promise((resolve, reject) => {
         const id = req.body.jobId,
             user = req.body.userId;
-        Job.findByIdAndUpdate(id, { $pull: { markedUsers: user } })
+        Job.findByIdAndUpdate(id, {
+                $pull: {
+                    markedUsers: user
+                }
+            })
             .then(() => {
-                User.findByIdAndUpdate(user, { $pull: { markedJobs: id } })
+                User.findByIdAndUpdate(user, {
+                        $pull: {
+                            markedJobs: id
+                        }
+                    })
                     .then(() => resolve(true))
                     .catch(err => reject(err));
             })
@@ -296,8 +399,18 @@ const filterJobBySearchContent = (jobs, name) => {
 }
 
 module.exports = {
-    getAllJobs, getJobById, createJob, updateJob, deleteJob,
-    filterJobByProvinceOrderId, filterJobByJobTypeOrderId,
-    filterJobByJobTypeAndProvinceOrderId, filterJobBySearchContent,
-    increase_views, markJob, unMarkJob
+    getAllJobs,
+    getJobById,
+    createJob,
+    updateJob,
+    deleteJob,
+    filterJobByProvinceOrderId,
+    filterJobByJobTypeOrderId,
+    filterJobByJobTypeAndProvinceOrderId,
+    filterJobBySearchContent,
+    increase_views,
+    markJob,
+    unMarkJob,
+    joinToJob,
+    filterJoinedUsersByAmount
 };

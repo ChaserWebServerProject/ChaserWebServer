@@ -41,29 +41,28 @@ var userSchema = new Schema({
         maxlength: 256,
         default: ''
     },
+    mobile: {
+        type: String,
+        maxlength: 11,
+        default: ''
+    },
     userExtend: {
         type: Schema.Types.ObjectId,
         ref: 'user_extend',
         default: null
     },
-    userPhotos: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'user_photo'
-        }
-    ],
-    createdJobs: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'job'
-        }
-    ],
-    markedJobs: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'job'
-        }
-    ],
+    userPhotos: [{
+        type: Schema.Types.ObjectId,
+        ref: 'user_photo'
+    }],
+    createdJobs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'job'
+    }],
+    markedJobs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'job'
+    }],
     city: {
         type: Schema.Types.ObjectId,
         ref: 'city',
@@ -77,7 +76,12 @@ var userSchema = new Schema({
     joinedJobs: [{
         type: Schema.Types.ObjectId,
         ref: 'job'
-    }]
+    }],
+    userRole: {
+        type: Schema.Types.ObjectId,
+        ref: 'role'
+    }
+
     // province: { type: Number, ref: 'province' },
     // userExtend: { type: String, ref: 'user_extend' }
 });

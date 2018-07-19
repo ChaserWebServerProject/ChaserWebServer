@@ -2,9 +2,45 @@ import React, { Component } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 import '../../public/content/css/top-nav.scss';
+import Login from '../components/Login';
+import{
+  tokenName
+}from '../variable/Variable';
 
 export default class TopNav extends Component {
+  constructor(props){
+    super(props);
+    this.state=({
+      signInDisplay : 'flex',
+      signOutDisplay: 'none',
+      userManageDisplay: 'none',
+      employerDisplay: 'none'
+    });
+  }
+
+  componentWillMount() {
+    this.onSetActionDisplay();
+  }
+
+  onSetActionDisplay = ()=>{
+    const token = localStorage.getItem(tokenName);
+    if(token){
+      this.state.signInDisplay = 'none';
+      this.state.signOutDisplay = 'flex';
+      this.state.userManageDisplay = 'flex';
+      this.state.employerDisplay = 'flex';
+      this.setState(this.state);
+    }else{
+      this.state.signInDisplay = 'flex';
+      this.state.signOutDisplay = 'none';
+      this.state.userManageDisplay = 'none';
+      this.state.employerDisplay = 'none';
+      this.setState(this.state);
+    }
+  }
+
   render() {
+    const { signInDisplay, signOutDisplay, userManageDisplay, employerDisplay } = this.state;
     return (
       <div className="top-nav">
         <nav className="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
@@ -17,7 +53,7 @@ export default class TopNav extends Component {
               <li className="nav-item">
                 <NavLink exact to="/" activeClassName="active">Trang chủ</NavLink>
               </li>
-              <li className="nav-item">
+              <li className="nav-item" style={{display:employerDisplay}}>
                 <NavLink to="/nhatuyendung" activeClassName="active">Nhà tuyển dụng</NavLink>
               </li>
             </ul>
@@ -28,13 +64,15 @@ export default class TopNav extends Component {
                     src={require('../../img/local_img/default-avatar.png')} className="img-circle avatar-img" alt="avatar"></img>
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a href="#"><i className="fa fa-user-o" aria-hidden="true"></i> Quản lý tài khoản</a></li>
-                  <li><a href="#"><i className="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                  <li style={{display:userManageDisplay}} ><a href="#"><i className="fa fa-user-o" aria-hidden="true"></i> Quản lý tài khoản</a></li>
+                  <li style={{display:signOutDisplay}}><a href="#" id="logOut"><i className="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                  <li style={{display:signInDisplay}}><a href="#" id='login'><i className="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
                 </ul>
               </li>
             </ul>
           </div>
         </nav>
+        <Login ref={ref => this.loginModal = ref} onSetActionDisplay={this.onSetActionDisplay} />
       </div>
     );
   }
@@ -42,6 +80,20 @@ export default class TopNav extends Component {
   onAddJqueryEvents() {
     $('a').on('click', function () {
       $('.navbar-collapse').removeClass('show');
+    });
+
+    var _this = this;
+
+    $('#login').click(function(){
+      _this.loginModal.onShowModal();
+    });
+
+    $('#logOut').click(function(){
+      const token = localStorage.getItem(tokenName);
+      if(token){
+        localStorage.removeItem(tokenName);
+        _this.onSetActionDisplay();
+      }
     });
   }
 

@@ -60,6 +60,7 @@ const getUserByUserNameAndPassword = (req) => {
 const login = (req) => {
     return new Promise((resolve, reject) => {
         getUserByUserNameAndPassword(req)
+        .populate('userRole')
             .exec()
             .then(user => resolve(user))
             .catch(err => reject(err));

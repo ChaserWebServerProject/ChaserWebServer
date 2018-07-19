@@ -64,10 +64,11 @@ router.post('/user/login', async (req, res, next) => {
         .then(resUser => {
             if (resUser) {
                 const userIdentity = {
-                    id: resUser._id
-                }
+                    id: resUser._id,
+                    role: resUser.userRole.roleName
+                };
                 jwt.sign({ userIdentity }, 'phai_thanh_cong_phai_giau_co', (err, token) => {
-                    if (err) returnres.json({ success: false, err });
+                    if (err) return res.json({ success: false, err });
                     return res.json({ success: true, token });
                 })
             } else {

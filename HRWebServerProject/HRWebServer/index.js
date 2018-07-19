@@ -10,20 +10,21 @@ const jobTypeController = require('./app/controllers/JobTypeController');
 const jobController = require('./app/controllers/JobController');
 const companyController = require('./app/controllers/CompanyController');
 const notificationController = require('./app/controllers/NotificationController');
+const roleController = require('./app//controllers/RoleController');
 
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ 'extended': 'false' }));
+app.use(bodyParser.urlencoded({
+    'extended': 'false'
+}));
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
 
-app.use('/service',
-    [
-        userController, provinceController, cityContronller, jobTypeController,
-        jobController, companyController, notificationController
-    ]
-);
+app.use('/service', [
+    userController, provinceController, cityContronller, jobTypeController,
+    jobController, companyController, notificationController, roleController
+]);
 
 var databaseUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/human_resource_db';
 mongoose.Promise = global.Promise;

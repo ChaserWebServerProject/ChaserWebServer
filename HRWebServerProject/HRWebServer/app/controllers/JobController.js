@@ -7,7 +7,7 @@ const {
     getAllJobs, getJobById, createJob, updateJob, deleteJob,
     filterJobByJobTypeAndProvinceOrderId, filterJobByJobTypeOrderId,
     filterJobByProvinceOrderId, filterJobBySearchContent,
-    increase_views, markJob, unMarkJob
+    increase_views, markJob, unMarkJob, joinToJob, filterJoinedUsersByAmount
 } = require('../services/JobService');
 const {
     convertDateToCompare
@@ -18,6 +18,13 @@ router.get('/job/get_all_jobs', (req, res, next) => {
     getAllJobs()
         .exec()
         .then(jobs => res.json(jobs))
+        .catch(err => res.json(err));
+});
+
+/* GET JOINED USERS BY AMOUNT */
+router.get('/job/get_joined_users_by_amount/:id/:amount', (req, res, next) => {
+    filterJoinedUsersByAmount(req)
+        .then(joinedAmount => res.json(joinedAmount))
         .catch(err => res.json(err));
 });
 
@@ -167,6 +174,13 @@ router.put('/job/update_job/:id', function (req, res, next) {
 /* DELETE JOB */
 router.delete('/job/delete_job/:id', function (req, res, next) {
     deleteJob(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
+});
+
+/* JOIN TO JOB */
+router.put('/job/join_to_job/:id', function (req, res, next) {
+    joinToJob(req)
         .then(result => res.json({ success: result }))
         .catch(err => res.json({ success: false, err: err }));
 });
