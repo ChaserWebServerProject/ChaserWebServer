@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import axios from 'axios';
 
 import '../../public/content/css/top-nav.scss';
 import Login from '../components/Login';
@@ -24,11 +25,30 @@ export default class TopNav extends Component {
 
   onSetActionDisplay = ()=>{
     const token = localStorage.getItem(tokenName);
+    const _this = this;
     if(token){
       this.state.signInDisplay = 'none';
       this.state.signOutDisplay = 'flex';
       this.state.userManageDisplay = 'flex';
-      this.state.employerDisplay = 'flex';
+      axios(
+        {
+          method: 'post',
+          url: '/service/user/get_user_identity_by_token',
+          headers:{
+            Authorization: `Bearer ${token.toString()}`
+          }
+        })
+      .then(result=>{
+        if(result.data.userIdentity.role === "employer"){
+          _this.state.employerDisplay = 'flex';
+          _this.setState(_this.state);
+        }else{
+          _this.state.employerDisplay = 'none';
+          _this.setState(_this.state);
+        }
+      }).catch(err=>{
+        console.log(err);
+      })
       this.setState(this.state);
     }else{
       this.state.signInDisplay = 'flex';
