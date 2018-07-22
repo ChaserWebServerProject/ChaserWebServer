@@ -7,11 +7,25 @@ var JobExtend = require('../models/JobExtend');
 var Company = require('../models/Company');
 
 const getAllUsers = () => {
-    return User.find().populate('userExtend');
+    return User.find()
+        .populate('userExtend city')
+        .populate({
+            path: 'city',
+            populate: {
+                path: 'province'
+            }
+        });
 }
 
 const getUserById = (id) => {
-    return User.findById(id).populate('userExtend');
+    return User.findById(id)
+        .populate('userExtend')
+        .populate({
+            path: 'city',
+            populate: {
+                path: 'province'
+            }
+        });
 }
 
 const createUser = (req) => {
