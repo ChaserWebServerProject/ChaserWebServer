@@ -54,6 +54,28 @@ const getJobById = (id) => {
         });
 };
 
+const unJoinFromJob = (req)=>{
+    return new Promise(async (resolve, reject) => {
+        const id = req.params.id;
+        const userId = req.body.userId;
+        Job.findByIdAndUpdate(id, {
+                $pull: {
+                    joinedUsers: userId
+                }
+            })
+            .then(() => {
+                User.findByIdAndUpdate(userId, {
+                        $pull: {
+                            joinedJobs: id
+                        }
+                    })
+                    .then(() => resolve(true))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
+}
+
 const joinToJob = (req) => {
     return new Promise(async (resolve, reject) => {
         const id = req.params.id;
@@ -412,5 +434,6 @@ module.exports = {
     markJob,
     unMarkJob,
     joinToJob,
-    filterJoinedUsersByAmount
+    filterJoinedUsersByAmount,
+    unJoinFromJob
 };

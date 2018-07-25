@@ -6,7 +6,7 @@ var JobExtend = require('../models/JobExtend');
 const {
     getAllJobs, getJobById, createJob, updateJob, deleteJob,
     filterJobByJobTypeAndProvinceOrderId, filterJobByJobTypeOrderId,
-    filterJobByProvinceOrderId, filterJobBySearchContent,
+    filterJobByProvinceOrderId, filterJobBySearchContent, unJoinFromJob,
     increase_views, markJob, unMarkJob, joinToJob, filterJoinedUsersByAmount
 } = require('../services/JobService');
 const {
@@ -181,6 +181,13 @@ router.delete('/job/delete_job/:id', function (req, res, next) {
 /* JOIN TO JOB */
 router.put('/job/join_to_job/:id', function (req, res, next) {
     joinToJob(req)
+        .then(result => res.json({ success: result }))
+        .catch(err => res.json({ success: false, err: err }));
+});
+
+/* UNJOIN FROM JOB */
+router.put('/job/un_join_from_job/:id', function (req, res, next) {
+    unJoinFromJob(req)
         .then(result => res.json({ success: result }))
         .catch(err => res.json({ success: false, err: err }));
 });
